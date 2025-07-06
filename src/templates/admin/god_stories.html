@@ -16,7 +16,12 @@
     <tr>
         <td>{{ story.id }}</td>
         <td>
-            <strong>{{ story.title[:50] }}{% if story.title|length > 50 %}...{% endif %}</strong>
+            <div class="story-cell">
+                <strong class="text-truncate">{{ story.title }}</strong>
+                {% if story.excerpt %}
+                    <small class="text-muted">{{ story.excerpt[:60] }}{% if story.excerpt|length > 60 %}...{% endif %}</small>
+                {% endif %}
+            </div>
         </td>
         <td>{{ story.author_name or 'Anonymous' }}</td>
         <td class="status-cell">

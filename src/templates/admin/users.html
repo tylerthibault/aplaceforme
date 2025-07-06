@@ -16,10 +16,15 @@
     <tr>
         <td>{{ user.id }}</td>
         <td>
-            <strong>{{ user.username }}</strong>
-            {% if user.is_admin() %}
-                <span class="badge badge-admin">Admin</span>
-            {% endif %}
+            <div class="user-cell">
+                <strong>{{ user.username }}</strong>
+                {% if user.is_admin() %}
+                    <span class="badge badge-admin">Admin</span>
+                {% endif %}
+                {% if user.email_verified %}
+                    <i class="fas fa-check-circle text-success" title="Email verified"></i>
+                {% endif %}
+            </div>
         </td>
         <td>{{ user.email }}</td>
         <td>

@@ -16,10 +16,17 @@
     <tr>
         <td>{{ post.id }}</td>
         <td>
-            <strong>{{ post.title[:50] }}{% if post.title|length > 50 %}...{% endif %}</strong>
-            {% if post.featured_image_url %}
-                <i class="fas fa-image text-info" title="Has featured image"></i>
-            {% endif %}
+            <div class="title-cell">
+                <strong class="text-truncate">{{ post.title }}</strong>
+                <div class="title-meta">
+                    {% if post.featured_image_url %}
+                        <i class="fas fa-image has-image" title="Has featured image"></i>
+                    {% endif %}
+                    {% if post.excerpt %}
+                        <small class="text-muted">{{ post.excerpt[:80] }}{% if post.excerpt|length > 80 %}...{% endif %}</small>
+                    {% endif %}
+                </div>
+            </div>
         </td>
         <td>{{ post.author_name or 'Anonymous' }}</td>
         <td class="status-cell">
@@ -30,8 +37,10 @@
             {% endif %}
         </td>
         <td>
-            <span class="views-count">{{ post.views or 0 }}</span>
-            <i class="fas fa-eye text-muted"></i>
+            <div class="views-cell">
+                <span class="views-count">{{ post.views or 0 }}</span>
+                <i class="fas fa-eye text-muted"></i>
+            </div>
         </td>
         <td>{{ post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else 'N/A' }}</td>
         <td>{{ post.updated_at.strftime('%Y-%m-%d %H:%M') if post.updated_at else 'N/A' }}</td>

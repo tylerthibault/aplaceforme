@@ -16,10 +16,17 @@
     <tr>
         <td>{{ song.id }}</td>
         <td>
-            <strong>{{ song.title }}</strong>
-            {% if song.file_url %}
-                <i class="fas fa-music text-success" title="Audio file available"></i>
-            {% endif %}
+            <div class="song-cell">
+                <strong>{{ song.title }}</strong>
+                <div class="song-meta">
+                    {% if song.file_url %}
+                        <i class="fas fa-music text-success" title="Audio file available"></i>
+                    {% endif %}
+                    {% if song.genre %}
+                        <span class="genre-tag">{{ song.genre }}</span>
+                    {% endif %}
+                </div>
+            </div>
         </td>
         <td>{{ song.artist or 'Unknown' }}</td>
         <td>{{ song.album or 'N/A' }}</td>
@@ -31,11 +38,13 @@
             {% endif %}
         </td>
         <td>
-            {% if song.duration %}
-                {{ '%d:%02d' | format(song.duration // 60, song.duration % 60) }}
-            {% else %}
-                N/A
-            {% endif %}
+            <div class="duration-cell">
+                {% if song.duration %}
+                    <span class="duration-time">{{ '%d:%02d' | format(song.duration // 60, song.duration % 60) }}</span>
+                {% else %}
+                    <span class="text-muted">N/A</span>
+                {% endif %}
+            </div>
         </td>
         <td>{{ song.created_at.strftime('%Y-%m-%d %H:%M') if song.created_at else 'N/A' }}</td>
         <td>

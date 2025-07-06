@@ -16,6 +16,9 @@
         <button class="btn btn-secondary" onclick="refreshTable()">
             <i class="fas fa-sync-alt"></i> Refresh
         </button>
+        <button class="btn btn-secondary" onclick="exportTable()">
+            <i class="fas fa-download"></i> Export
+        </button>
     </div>
 </div>
 
@@ -39,6 +42,7 @@
     </div>
 
     <div class="admin-table-container">
+        {% if pagination and pagination.items %}
         <table class="admin-table" id="dataTable">
             <thead>
                 <tr>
@@ -49,6 +53,13 @@
                 {% block table_body %}{% endblock %}
             </tbody>
         </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No Data Available</h3>
+            <p>{% if add_url %}Click "Add New" to create your first entry.{% else %}No records found.{% endif %}</p>
+        </div>
+        {% endif %}
     </div>
 
     {% if pagination %}
@@ -139,6 +150,90 @@ function searchTable() {
         row.style.display = shouldShow ? '' : 'none';
     }
 }
+
+function exportTable() {
+    const table = document.getElementById('dataTable');
+    if (!table) return;
+    
+    // Simple CSV export
+    const rows = table.querySelectorAll('tr');
+    const csv = [];
+    
+    rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = [];
+        cols.forEach(col => {
+            // Clean up the text content
+            let text = col.textContent.trim();
+            text = text.replace(/"/g, '""'); // Escape quotes
+            rowData.push(`"${text}"`);
+        });
+        csv.push(rowData.join(','));
+    });
+    
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `{{ title | lower | replace(' ', '_') }}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function makeSortable() {
+    const headers = document.querySelectorAll('.admin-table th');
+    headers.forEach((header, index) => {
+        // Skip action columns
+        if (header.textContent.toLowerCase().includes('action')) return;
+        
+        header.classList.add('sortable-header');
+        header.addEventListener('click', () => sortTable(index));
+    });
+}
+
+function sortTable(columnIndex) {
+    const table = document.getElementById('dataTable');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const header = table.querySelectorAll('th')[columnIndex];
+    
+    // Determine sort direction
+    const isAsc = header.classList.contains('sort-desc');
+    
+    // Clear all sort classes
+    table.querySelectorAll('th').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+    });
+    
+    // Add appropriate class
+    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        const aText = a.cells[columnIndex].textContent.trim();
+        const bText = b.cells[columnIndex].textContent.trim();
+        
+        // Try to parse as numbers
+        const aNum = parseFloat(aText);
+        const bNum = parseFloat(bText);
+        
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return isAsc ? aNum - bNum : bNum - aNum;
+        }
+        
+        // Sort as strings
+        return isAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+    });
+    
+    // Reorder rows
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+// Initialize sortable headers when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    makeSortable();
+});
 
 function togglePublish(button) {
     const id = button.getAttribute('data-id');
