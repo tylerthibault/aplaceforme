@@ -1,0 +1,107 @@
+{% extends "bases/public_base.html" %}
+
+{% block title %}Music Library - A Place For Me{% endblock %}
+
+{% block main %}
+<section class="content-header">
+    <div class="container">
+        <div class="header-content">
+            <h1>Uplifting Music</h1>
+            <p>Listen to soul-stirring worship songs and contemporary Christian music that will lift your spirits and draw you closer to God.</p>
+        </div>
+    </div>
+</section>
+
+<section class="content-listing">
+    <div class="container">
+        {% if songs.items %}
+            <div class="music-grid">
+                {% for song in songs.items %}
+                <div class="music-card">
+                    <div class="music-info">
+                        <h3>{{ song.title }}</h3>
+                        <p class="artist">{{ song.artist or 'Unknown Artist' }}</p>
+                        {% if song.album %}
+                            <p class="album">Album: {{ song.album }}</p>
+                        {% endif %}
+                        <div class="music-meta">
+                            {% if song.genre %}
+                                <span class="genre">{{ song.genre }}</span>
+                            {% endif %}
+                            {% if song.duration %}
+                                <span class="duration">{{ (song.duration // 60) }}:{{ '%02d' | format(song.duration % 60) }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="music-actions">
+                        <a href="{{ url_for('main.music_detail', id=song.id) }}" class="btn btn-primary btn-sm">Listen Now</a>
+                        <span class="uploaded-by">Added by {{ song.uploader.username }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if songs.pages > 1 %}
+            <div class="pagination-wrapper">
+                <nav class="pagination">
+                    {% if songs.has_prev %}
+                        <a href="{{ url_for('main.music', page=songs.prev_num) }}" class="pagination-link">← Previous</a>
+                    {% endif %}
+                    
+                    {% for page_num in songs.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != songs.page %}
+                                <a href="{{ url_for('main.music', page=page_num) }}" class="pagination-link">{{ page_num }}</a>
+                            {% else %}
+                                <span class="pagination-link active">{{ page_num }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="pagination-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if songs.has_next %}
+                        <a href="{{ url_for('main.music', page=songs.next_num) }}" class="pagination-link">Next →</a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-content">
+                    <h3>No Music Available</h3>
+                    <p>We're building our music library with inspiring worship songs. Check back soon!</p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Return Home</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Music Categories -->
+<section class="music-categories">
+    <div class="container">
+        <h2>Explore by Genre</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <h4>Hymns</h4>
+                <p>Traditional hymns that have stood the test of time</p>
+            </div>
+            <div class="category-card">
+                <h4>Contemporary Worship</h4>
+                <p>Modern worship songs for today's believers</p>
+            </div>
+            <div class="category-card">
+                <h4>Celtic & Folk</h4>
+                <p>Beautiful melodies with rich spiritual heritage</p>
+            </div>
+            <div class="category-card">
+                <h4>Gospel</h4>
+                <p>Uplifting gospel music that moves the soul</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

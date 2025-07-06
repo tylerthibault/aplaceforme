@@ -1,0 +1,98 @@
+{% extends "bases/public_base.html" %}
+
+{% block title %}Radio Sessions - A Place For Me{% endblock %}
+
+{% block main %}
+<section class="content-header">
+    <div class="container">
+        <div class="header-content">
+            <h1>Radio Sessions & Podcasts</h1>
+            <p>Listen to inspiring talks, worship sessions, and spiritual discussions that will uplift your spirit and strengthen your faith.</p>
+        </div>
+    </div>
+</section>
+
+<section class="content-listing">
+    <div class="container">
+        {% if sessions.items %}
+            <div class="content-grid radio-grid">
+                {% for session in sessions.items %}
+                <article class="content-card radio-card">
+                    <div class="card-content">
+                        {% if session.thumbnail_path %}
+                            <div class="session-thumbnail">
+                                <img src="{{ session.thumbnail_path }}" alt="{{ session.title }}" loading="lazy">
+                            </div>
+                        {% endif %}
+                        <div class="session-info">
+                            <h3><a href="{{ url_for('main.radio_detail', id=session.id) }}">{{ session.title }}</a></h3>
+                            <div class="session-meta">
+                                <span class="uploader">By {{ session.uploader.username }}</span>
+                                <span class="date">{{ session.created_at.strftime('%B %d, %Y') }}</span>
+                                {% if session.duration %}
+                                    <span class="duration">{{ session.get_formatted_duration() }}</span>
+                                {% endif %}
+                            </div>
+                            {% if session.description %}
+                                <p class="session-description">{{ session.get_description_preview(120) }}</p>
+                            {% endif %}
+                            {% if session.episode_number %}
+                                <div class="episode-info">
+                                    {% if session.season_number %}
+                                        <span class="episode-badge">S{{ session.season_number }}E{{ session.episode_number }}</span>
+                                    {% else %}
+                                        <span class="episode-badge">Episode {{ session.episode_number }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="session-actions">
+                            <a href="{{ url_for('main.radio_detail', id=session.id) }}" class="btn btn-primary">Listen Now</a>
+                            {% if session.download_count %}
+                                <span class="download-count">{{ session.download_count }} downloads</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if sessions.pages > 1 %}
+            <div class="pagination-wrapper">
+                <nav class="pagination">
+                    {% if sessions.has_prev %}
+                        <a href="{{ url_for('main.radio', page=sessions.prev_num) }}" class="pagination-link">← Previous</a>
+                    {% endif %}
+                    
+                    {% for page_num in sessions.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != sessions.page %}
+                                <a href="{{ url_for('main.radio', page=page_num) }}" class="pagination-link">{{ page_num }}</a>
+                            {% else %}
+                                <span class="pagination-link active">{{ page_num }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="pagination-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if sessions.has_next %}
+                        <a href="{{ url_for('main.radio', page=sessions.next_num) }}" class="pagination-link">Next →</a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-content">
+                    <h3>No Radio Sessions Yet</h3>
+                    <p>We're working on creating inspiring audio content for you. Check back soon!</p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Return Home</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

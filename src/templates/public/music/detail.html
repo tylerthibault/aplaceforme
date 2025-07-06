@@ -1,0 +1,142 @@
+{% extends "bases/public_base.html" %}
+
+{% block title %}{{ song.title }} - Music Library{% endblock %}
+
+{% block main %}
+<section class="music-detail">
+    <div class="container-narrow">
+        <div class="music-player-section">
+            <div class="music-header">
+                <h1>{{ song.title }}</h1>
+                <p class="artist">by {{ song.artist or 'Unknown Artist' }}</p>
+                {% if song.album %}
+                    <p class="album">from <em>{{ song.album }}</em></p>
+                {% endif %}
+            </div>
+
+            <!-- Audio Player Placeholder -->
+            <div class="audio-player">
+                <div class="player-placeholder">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="player-info">
+                        <p><strong>Audio Player</strong></p>
+                        <p>File: {{ song.file_path }}</p>
+                        {% if song.duration %}
+                            <p>Duration: {{ (song.duration // 60) }}:{{ '%02d' | format(song.duration % 60) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="player-note"><em>Note: Audio streaming functionality would be implemented here with an HTML5 audio player or third-party service.</em></p>
+            </div>
+
+            <div class="music-meta">
+                <div class="meta-grid">
+                    {% if song.genre %}
+                    <div class="meta-item">
+                        <span class="meta-label">Genre:</span>
+                        <span class="meta-value">{{ song.genre }}</span>
+                    </div>
+                    {% endif %}
+                    {% if song.duration %}
+                    <div class="meta-item">
+                        <span class="meta-label">Duration:</span>
+                        <span class="meta-value">{{ (song.duration // 60) }}:{{ '%02d' | format(song.duration % 60) }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="meta-item">
+                        <span class="meta-label">Added by:</span>
+                        <span class="meta-value">{{ song.uploader.username }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Added on:</span>
+                        <span class="meta-value">{{ song.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if song.description %}
+            <div class="music-description">
+                <h3>About This Song</h3>
+                <p>{{ song.description }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="music-actions">
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="togglePlayPause()">
+                    <i class="fas fa-play"></i> Play
+                </button>
+                <button class="btn btn-outline" onclick="addToPlaylist()">
+                    <i class="fas fa-plus"></i> Add to Playlist
+                </button>
+                <button class="btn btn-outline" onclick="downloadSong()">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <h4>Share this song</h4>
+            <div class="share-buttons">
+                <a href="https://twitter.com/intent/tweet?text=Listening to {{ song.title }} by {{ song.artist or 'Unknown Artist' }}&url={{ request.url | urlencode }}" 
+                   class="share-btn twitter" target="_blank" rel="noopener">
+                    <i class="fab fa-twitter"></i> Twitter
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}" 
+                   class="share-btn facebook" target="_blank" rel="noopener">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </a>
+                <a href="mailto:?subject=Beautiful Song: {{ song.title | urlencode }}&body=I thought you might enjoy this worship song: {{ request.url | urlencode }}" 
+                   class="share-btn email">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+        </div>
+
+        <div class="navigation-section">
+            <a href="{{ url_for('main.music') }}" class="btn btn-outline">← Back to Music Library</a>
+        </div>
+    </div>
+</section>
+
+<!-- Related Songs -->
+<section class="related-music">
+    <div class="container">
+        <h2>More Music You Might Enjoy</h2>
+        <div class="related-grid">
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.radio') }}">Radio Sessions</a></h4>
+                <p>Listen to live radio sessions with worship and teaching.</p>
+            </div>
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.god_stories') }}">God Stories</a></h4>
+                <p>Read inspiring testimonies from our community.</p>
+            </div>
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.blogs') }}">Blog Posts</a></h4>
+                <p>Discover articles about faith and spiritual growth.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function togglePlayPause() {
+    // Placeholder function for play/pause functionality
+    alert('Audio player functionality would be implemented here');
+}
+
+function addToPlaylist() {
+    // Placeholder function for playlist functionality
+    alert('Playlist functionality would be implemented here');
+}
+
+function downloadSong() {
+    // Placeholder function for download functionality
+    alert('Download functionality would be implemented here');
+}
+</script>
+{% endblock %}

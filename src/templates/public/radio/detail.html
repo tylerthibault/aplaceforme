@@ -1,0 +1,138 @@
+{% extends "bases/public_base.html" %}
+
+{% block title %}{{ session.title }} - A Place For Me{% endblock %}
+
+{% block main %}
+<article class="content-detail radio-detail">
+    <div class="container-narrow">
+        <header class="session-header">
+            <h1>{{ session.title }}</h1>
+            <div class="session-meta">
+                <span class="uploader">By {{ session.uploader.username }}</span>
+                <span class="date">{{ session.created_at.strftime('%B %d, %Y') }}</span>
+                {% if session.duration %}
+                    <span class="duration">Duration: {{ session.get_formatted_duration() }}</span>
+                {% endif %}
+                {% if session.episode_number %}
+                    <span class="episode-info">
+                        {% if session.season_number %}
+                            Season {{ session.season_number }}, Episode {{ session.episode_number }}
+                        {% else %}
+                            Episode {{ session.episode_number }}
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </div>
+        </header>
+
+        {% if session.thumbnail_path %}
+            <div class="session-thumbnail-large">
+                <img src="{{ session.thumbnail_path }}" alt="{{ session.title }}" loading="lazy">
+            </div>
+        {% endif %}
+
+        <div class="audio-player-wrapper">
+            <div class="audio-player">
+                <audio controls preload="metadata" style="width: 100%;">
+                    <source src="{{ session.file_path }}" type="audio/mpeg">
+                    <source src="{{ session.file_path }}" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        {% if session.description %}
+            <div class="session-description">
+                <h3>About This Session</h3>
+                <div class="description-content">
+                    {{ session.description | nl2br | safe }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if session.tags %}
+            <div class="session-tags">
+                <h4>Tags:</h4>
+                <div class="tag-list">
+                    {% for tag in session.get_tags_list() %}
+                        <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <footer class="session-footer">
+            <div class="share-section">
+                <h4>Share this session</h4>
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text={{ session.title | urlencode }}&url={{ request.url | urlencode }}" 
+                       class="share-btn twitter" target="_blank" rel="noopener">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}" 
+                       class="share-btn facebook" target="_blank" rel="noopener">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href="mailto:?subject={{ session.title | urlencode }}&body=I thought you might enjoy this radio session: {{ request.url | urlencode }}" 
+                       class="share-btn email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+
+            <div class="navigation-section">
+                <a href="{{ url_for('main.radio') }}" class="btn btn-outline">← Back to All Sessions</a>
+                {% if session.file_path %}
+                    <a href="{{ session.file_path }}" download class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                {% endif %}
+            </div>
+        </footer>
+    </div>
+</article>
+
+<!-- Related Sessions Section -->
+<section class="related-content">
+    <div class="container">
+        <h2>You Might Also Like</h2>
+        <div class="related-grid">
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.music') }}">Listen to Music</a></h4>
+                <p>Discover our collection of uplifting worship songs and contemporary Christian music.</p>
+            </div>
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.blogs') }}">Read Blog Posts</a></h4>
+                <p>Explore thought-provoking articles about faith, life, and spiritual growth.</p>
+            </div>
+            <div class="related-item">
+                <h4><a href="{{ url_for('main.god_stories') }}">God Stories</a></h4>
+                <p>Read powerful testimonies of God's work in people's lives.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const audio = document.querySelector('audio');
+    
+    if (audio) {
+        // Track when audio is played
+        audio.addEventListener('play', function() {
+            // In a real implementation, you might want to track play statistics
+            console.log('Audio playback started');
+        });
+        
+        // Handle download tracking
+        const downloadBtn = document.querySelector('a[download]');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                // In a real implementation, you might want to track download statistics
+                console.log('Audio download initiated');
+            });
+        }
+    }
+});
+</script>
+{% endblock %}

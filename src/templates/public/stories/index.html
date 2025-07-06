@@ -1,0 +1,86 @@
+{% extends "bases/public_base.html" %}
+
+{% block title %}God Stories - A Place For Me{% endblock %}
+
+{% block main %}
+<section class="content-header">
+    <div class="container">
+        <div class="header-content">
+            <h1>God Stories</h1>
+            <p>Experience powerful testimonies and miraculous accounts of God's work in people's lives, shared with authenticity and love.</p>
+        </div>
+    </div>
+</section>
+
+<section class="content-listing">
+    <div class="container">
+        {% if stories.items %}
+            <div class="content-grid">
+                {% for story in stories.items %}
+                <article class="content-card story-card">
+                    <div class="card-content">
+                        <h3><a href="{{ url_for('main.story_detail', id=story.id) }}">{{ story.title }}</a></h3>
+                        <div class="card-meta">
+                            <span class="author">Shared by {{ story.author.username }}</span>
+                            <span class="date">{{ story.created_at.strftime('%B %d, %Y') }}</span>
+                        </div>
+                        <p class="excerpt">{{ story.get_excerpt(200) }}</p>
+                        <div class="card-footer">
+                            <a href="{{ url_for('main.story_detail', id=story.id) }}" class="read-more">Read Full Story →</a>
+                            <span class="story-badge">God Story</span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if stories.pages > 1 %}
+            <div class="pagination-wrapper">
+                <nav class="pagination">
+                    {% if stories.has_prev %}
+                        <a href="{{ url_for('main.god_stories', page=stories.prev_num) }}" class="pagination-link">← Previous</a>
+                    {% endif %}
+                    
+                    {% for page_num in stories.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != stories.page %}
+                                <a href="{{ url_for('main.god_stories', page=page_num) }}" class="pagination-link">{{ page_num }}</a>
+                            {% else %}
+                                <span class="pagination-link active">{{ page_num }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="pagination-ellipsis">…</span>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if stories.has_next %}
+                        <a href="{{ url_for('main.god_stories', page=stories.next_num) }}" class="pagination-link">Next →</a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-content">
+                    <h3>No Stories Yet</h3>
+                    <p>We're collecting inspiring testimonies to share with our community. Check back soon!</p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Return Home</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="story-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Have a God Story to Share?</h2>
+            <p>We'd love to hear how God has worked in your life. Your story could be the encouragement someone else needs today.</p>
+            <a href="mailto:stories@aplaceforme.com" class="btn btn-primary btn-lg">Share Your Story</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

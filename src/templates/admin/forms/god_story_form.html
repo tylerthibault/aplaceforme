@@ -1,0 +1,171 @@
+{% extends "admin/forms/base_form.html" %}
+
+{% block title %}{{ 'Edit God Story' if god_story else 'Add New God Story' }} - Admin{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="title" class="required">Title</label>
+    <input type="text" class="form-control" id="title" name="title" 
+           value="{{ god_story.title if god_story else '' }}" required>
+    <div class="help-text">Enter a meaningful title for this God story</div>
+</div>
+
+<div class="form-group">
+    <label for="content" class="required">Story Content</label>
+    <div class="editor-toolbar">
+        <button type="button" class="editor-btn" data-command="bold" title="Bold">
+            <i class="fas fa-bold"></i>
+        </button>
+        <button type="button" class="editor-btn" data-command="italic" title="Italic">
+            <i class="fas fa-italic"></i>
+        </button>
+        <button type="button" class="editor-btn" data-command="link" title="Link">
+            <i class="fas fa-link"></i>
+        </button>
+    </div>
+    <textarea class="form-control editor" id="content" name="content" 
+              rows="12" required>{{ god_story.content if god_story else '' }}</textarea>
+    <div class="help-text">Share your story of God's faithfulness, love, and miracles</div>
+</div>
+
+<div class="form-group">
+    <label for="author_name">Author Name</label>
+    <input type="text" class="form-control" id="author_name" name="author_name" 
+           value="{{ god_story.author_name if god_story else current_user.username }}">
+    <div class="help-text">The name that will appear as the author of this story</div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="category">Category</label>
+        <select class="form-control" id="category" name="category">
+            <option value="">Select a category...</option>
+            <option value="healing" {{ 'selected' if god_story and god_story.category == 'healing' else '' }}>Healing</option>
+            <option value="provision" {{ 'selected' if god_story and god_story.category == 'provision' else '' }}>Provision</option>
+            <option value="guidance" {{ 'selected' if god_story and god_story.category == 'guidance' else '' }}>Guidance</option>
+            <option value="protection" {{ 'selected' if god_story and god_story.category == 'protection' else '' }}>Protection</option>
+            <option value="salvation" {{ 'selected' if god_story and god_story.category == 'salvation' else '' }}>Salvation</option>
+            <option value="restoration" {{ 'selected' if god_story and god_story.category == 'restoration' else '' }}>Restoration</option>
+            <option value="miracle" {{ 'selected' if god_story and god_story.category == 'miracle' else '' }}>Miracle</option>
+            <option value="other" {{ 'selected' if god_story and god_story.category == 'other' else '' }}>Other</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="tags">Tags</label>
+        <input type="text" class="form-control" id="tags" name="tags" 
+               value="{{ god_story.tags if god_story else '' }}" 
+               placeholder="Enter tags separated by commas">
+        <div class="help-text">Add tags to help users find your story</div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="featured_image">Featured Image</label>
+    <div class="file-upload-area" onclick="document.getElementById('featured_image').click()">
+        <div class="file-upload-icon">
+            <i class="fas fa-image"></i>
+        </div>
+        <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop an image
+        </div>
+        <div class="file-upload-text">
+            PNG, JPG, GIF up to 5MB
+        </div>
+    </div>
+    <input type="file" class="file-upload-input" id="featured_image" name="featured_image" 
+           accept="image/*">
+    <div class="preview-container" style="display: none;"></div>
+    <div class="help-text">Choose an inspiring image for your God story</div>
+</div>
+
+<div class="form-group">
+    <label for="audio_file">Audio Recording</label>
+    <div class="file-upload-area" onclick="document.getElementById('audio_file').click()">
+        <div class="file-upload-icon">
+            <i class="fas fa-microphone"></i>
+        </div>
+        <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop an audio file
+        </div>
+        <div class="file-upload-text">
+            MP3, WAV, OGG up to 50MB
+        </div>
+    </div>
+    <input type="file" class="file-upload-input" id="audio_file" name="audio_file" 
+           accept="audio/*">
+    <div class="preview-container" style="display: none;"></div>
+    <div class="help-text">Optional: Add an audio recording of your testimony</div>
+</div>
+
+<div class="form-group">
+    <label for="video_file">Video Recording</label>
+    <div class="file-upload-area" onclick="document.getElementById('video_file').click()">
+        <div class="file-upload-icon">
+            <i class="fas fa-video"></i>
+        </div>
+        <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop a video file
+        </div>
+        <div class="file-upload-text">
+            MP4, WebM, MOV up to 100MB
+        </div>
+    </div>
+    <input type="file" class="file-upload-input" id="video_file" name="video_file" 
+           accept="video/*">
+    <div class="preview-container" style="display: none;"></div>
+    <div class="help-text">Optional: Add a video recording of your testimony</div>
+</div>
+
+<div class="form-group">
+    <label>Publishing Status</label>
+    <div class="status-options">
+        <div class="status-option">
+            <input type="radio" id="status_draft" name="status" value="draft" 
+                   {{ 'checked' if not god_story or god_story.status == 'draft' else '' }}>
+            <label for="status_draft">Draft</label>
+        </div>
+        <div class="status-option">
+            <input type="radio" id="status_published" name="status" value="published" 
+                   {{ 'checked' if god_story and god_story.status == 'published' else '' }}>
+            <label for="status_published">Published</label>
+        </div>
+        <div class="status-option">
+            <input type="radio" id="status_scheduled" name="status" value="scheduled" 
+                   {{ 'checked' if god_story and god_story.status == 'scheduled' else '' }}>
+            <label for="status_scheduled">Scheduled</label>
+        </div>
+    </div>
+    
+    <div class="scheduling-options">
+        <div class="form-group">
+            <label for="publish_at">Publish Date & Time</label>
+            <input type="datetime-local" class="form-control" id="publish_at" name="publish_at" 
+                   value="{{ god_story.publish_at.strftime('%Y-%m-%dT%H:%M') if god_story and god_story.publish_at else '' }}">
+            <div class="help-text">Set when this story should be automatically published</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="featured" name="featured" 
+               {{ 'checked' if god_story and god_story.featured else '' }}>
+        <label for="featured">Featured Story</label>
+    </div>
+    <div class="help-text">Featured stories appear prominently on the homepage</div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="allow_comments" name="allow_comments" 
+               {{ 'checked' if not god_story or god_story.allow_comments else '' }}>
+        <label for="allow_comments">Allow Comments</label>
+    </div>
+    <div class="help-text">Allow users to leave comments on this story</div>
+</div>
+
+{% if god_story %}
+<input type="hidden" name="god_story_id" value="{{ god_story.id }}">
+{% endif %}
+{% endblock %}

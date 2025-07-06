@@ -1,0 +1,211 @@
+{% extends "admin/forms/base_form.html" %}
+
+{% block title %}{{ 'Edit Radio Session' if radio_session else 'Add New Radio Session' }} - Admin{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="title" class="required">Episode Title</label>
+    <input type="text" class="form-control" id="title" name="title" 
+           value="{{ radio_session.title if radio_session else '' }}" required>
+    <div class="help-text">Enter a compelling title for this radio episode</div>
+</div>
+
+<div class="form-group">
+    <label for="description">Description</label>
+    <div class="editor-toolbar">
+        <button type="button" class="editor-btn" data-command="bold" title="Bold">
+            <i class="fas fa-bold"></i>
+        </button>
+        <button type="button" class="editor-btn" data-command="italic" title="Italic">
+            <i class="fas fa-italic"></i>
+        </button>
+        <button type="button" class="editor-btn" data-command="link" title="Link">
+            <i class="fas fa-link"></i>
+        </button>
+    </div>
+    <textarea class="form-control editor" id="description" name="description" 
+              rows="6">{{ radio_session.description if radio_session else '' }}</textarea>
+    <div class="help-text">Describe what listeners can expect from this episode</div>
+</div>
+
+<div class="form-group">
+    <label for="audio_file" class="required">Audio File</label>
+    <div class="file-upload-area" onclick="document.getElementById('audio_file').click()">
+        <div class="file-upload-icon">
+            <i class="fas fa-microphone"></i>
+        </div>
+        <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop your audio file
+        </div>
+        <div class="file-upload-text">
+            MP3, WAV, OGG up to 100MB
+        </div>
+    </div>
+    <input type="file" class="file-upload-input" id="audio_file" name="audio_file" 
+           accept="audio/*" {{ 'required' if not radio_session else '' }}>
+    <div class="preview-container" style="display: none;"></div>
+    <div class="help-text">Upload the audio file for this radio session</div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="episode_number">Episode Number</label>
+        <input type="number" class="form-control" id="episode_number" name="episode_number" 
+               value="{{ radio_session.episode_number if radio_session else '' }}" min="1">
+        <div class="help-text">Episode number in the series</div>
+    </div>
+    
+    <div class="form-group">
+        <label for="season_number">Season Number</label>
+        <input type="number" class="form-control" id="season_number" name="season_number" 
+               value="{{ radio_session.season_number if radio_session else '' }}" min="1">
+        <div class="help-text">Season number (if applicable)</div>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="duration">Duration (seconds)</label>
+        <input type="number" class="form-control" id="duration" name="duration" 
+               value="{{ radio_session.duration if radio_session else '' }}" min="1">
+        <div class="help-text">Episode duration in seconds (will be auto-detected if not provided)</div>
+    </div>
+    
+    <div class="form-group">
+        <label for="host">Host</label>
+        <input type="text" class="form-control" id="host" name="host" 
+               value="{{ radio_session.host if radio_session else current_user.username }}">
+        <div class="help-text">The host or presenter of this episode</div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="thumbnail">Thumbnail Image</label>
+    <div class="file-upload-area" onclick="document.getElementById('thumbnail').click()">
+        <div class="file-upload-icon">
+            <i class="fas fa-image"></i>
+        </div>
+        <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop a thumbnail image
+        </div>
+        <div class="file-upload-text">
+            PNG, JPG, GIF up to 5MB
+        </div>
+    </div>
+    <input type="file" class="file-upload-input" id="thumbnail" name="thumbnail" 
+           accept="image/*">
+    <div class="preview-container" style="display: none;"></div>
+    <div class="help-text">Upload a thumbnail image for this episode</div>
+</div>
+
+<div class="form-group">
+    <label for="guests">Guests</label>
+    <input type="text" class="form-control" id="guests" name="guests" 
+           value="{{ radio_session.guests if radio_session else '' }}" 
+           placeholder="Enter guest names separated by commas">
+    <div class="help-text">List any guests featured in this episode</div>
+</div>
+
+<div class="form-group">
+    <label for="tags">Tags</label>
+    <input type="text" class="form-control" id="tags" name="tags" 
+           value="{{ radio_session.tags if radio_session else '' }}" 
+           placeholder="Enter tags separated by commas">
+    <div class="help-text">Add tags to help users find your episode</div>
+</div>
+
+<div class="form-group">
+    <label for="category">Category</label>
+    <select class="form-control" id="category" name="category">
+        <option value="">Select a category...</option>
+        <option value="sermon" {{ 'selected' if radio_session and radio_session.category == 'sermon' else '' }}>Sermon</option>
+        <option value="teaching" {{ 'selected' if radio_session and radio_session.category == 'teaching' else '' }}>Teaching</option>
+        <option value="testimony" {{ 'selected' if radio_session and radio_session.category == 'testimony' else '' }}>Testimony</option>
+        <option value="interview" {{ 'selected' if radio_session and radio_session.category == 'interview' else '' }}>Interview</option>
+        <option value="worship" {{ 'selected' if radio_session and radio_session.category == 'worship' else '' }}>Worship</option>
+        <option value="prayer" {{ 'selected' if radio_session and radio_session.category == 'prayer' else '' }}>Prayer</option>
+        <option value="bible_study" {{ 'selected' if radio_session and radio_session.category == 'bible_study' else '' }}>Bible Study</option>
+        <option value="devotional" {{ 'selected' if radio_session and radio_session.category == 'devotional' else '' }}>Devotional</option>
+        <option value="discussion" {{ 'selected' if radio_session and radio_session.category == 'discussion' else '' }}>Discussion</option>
+        <option value="announcement" {{ 'selected' if radio_session and radio_session.category == 'announcement' else '' }}>Announcement</option>
+        <option value="other" {{ 'selected' if radio_session and radio_session.category == 'other' else '' }}>Other</option>
+    </select>
+    <div class="help-text">Choose the category that best describes this episode</div>
+</div>
+
+<div class="form-group">
+    <label for="bible_references">Bible References</label>
+    <input type="text" class="form-control" id="bible_references" name="bible_references" 
+           value="{{ radio_session.bible_references if radio_session else '' }}" 
+           placeholder="e.g., John 3:16, Romans 8:28, Psalm 23">
+    <div class="help-text">Optional: Bible verses referenced in this episode</div>
+</div>
+
+<div class="form-group">
+    <label for="show_notes">Show Notes</label>
+    <textarea class="form-control" id="show_notes" name="show_notes" 
+              rows="6">{{ radio_session.show_notes if radio_session else '' }}</textarea>
+    <div class="help-text">Optional: Detailed notes, timestamps, or additional resources</div>
+</div>
+
+<div class="form-group">
+    <label>Publishing Status</label>
+    <div class="status-options">
+        <div class="status-option">
+            <input type="radio" id="status_draft" name="status" value="draft" 
+                   {{ 'checked' if not radio_session or radio_session.status == 'draft' else '' }}>
+            <label for="status_draft">Draft</label>
+        </div>
+        <div class="status-option">
+            <input type="radio" id="status_published" name="status" value="published" 
+                   {{ 'checked' if radio_session and radio_session.status == 'published' else '' }}>
+            <label for="status_published">Published</label>
+        </div>
+        <div class="status-option">
+            <input type="radio" id="status_scheduled" name="status" value="scheduled" 
+                   {{ 'checked' if radio_session and radio_session.status == 'scheduled' else '' }}>
+            <label for="status_scheduled">Scheduled</label>
+        </div>
+    </div>
+    
+    <div class="scheduling-options">
+        <div class="form-group">
+            <label for="publish_at">Publish Date & Time</label>
+            <input type="datetime-local" class="form-control" id="publish_at" name="publish_at" 
+                   value="{{ radio_session.publish_at.strftime('%Y-%m-%dT%H:%M') if radio_session and radio_session.publish_at else '' }}">
+            <div class="help-text">Set when this episode should be automatically published</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="featured" name="featured" 
+               {{ 'checked' if radio_session and radio_session.featured else '' }}>
+        <label for="featured">Featured Episode</label>
+    </div>
+    <div class="help-text">Featured episodes appear prominently on the radio page</div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="allow_download" name="allow_download" 
+               {{ 'checked' if not radio_session or radio_session.allow_download else '' }}>
+        <label for="allow_download">Allow Download</label>
+    </div>
+    <div class="help-text">Allow users to download this episode</div>
+</div>
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="allow_comments" name="allow_comments" 
+               {{ 'checked' if not radio_session or radio_session.allow_comments else '' }}>
+        <label for="allow_comments">Allow Comments</label>
+    </div>
+    <div class="help-text">Allow users to leave comments on this episode</div>
+</div>
+
+{% if radio_session %}
+<input type="hidden" name="radio_session_id" value="{{ radio_session.id }}">
+{% endif %}
+{% endblock %}

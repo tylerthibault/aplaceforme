@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ config.APP_NAME or 'A Place For Me' }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}A faith-driven platform for inspiration, stories, music, and community{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <!-- Custom CSS -->
+    {% block custom_css %}
+        
+    {% endblock custom_css %}
+</head>
+<body>
+    <div class="page_wrapper">
+        {% block page_wrapper %}
+
+        <nav class="navbar">
+            {% block navbar %}
+                <div class="container">
+                    <div class="nav-content">
+                        <a href="{{ url_for('main.index') }}" class="nav-brand">
+                            <span class="brand-text">A Place For Me</span>
+                        </a>
+                        <button class="nav-toggle" id="nav-toggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <div class="nav-links" id="nav-links">
+                            <a href="{{ url_for('main.index') }}" class="nav-link">Home</a>
+                            <a href="{{ url_for('main.blogs') }}" class="nav-link">Blog</a>
+                            <a href="{{ url_for('main.god_stories') }}" class="nav-link">Stories</a>
+                            <a href="{{ url_for('main.music') }}" class="nav-link">Music</a>
+                            <a href="{{ url_for('main.radio') }}" class="nav-link">Radio</a>
+                            <a href="{{ url_for('main.testimonials') }}" class="nav-link">Testimonials</a>
+                            <a href="{{ url_for('main.about') }}" class="nav-link">About</a>
+                            
+                            {% if current_user.is_authenticated %}
+                                <div class="user-menu">
+                                    <button class="user-menu-toggle" onclick="toggleUserMenu()">
+                                        <i class="fas fa-user"></i>
+                                        {{ current_user.username }}
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="user-menu-dropdown" id="user-menu-dropdown">
+                                        <a href="{{ url_for('auth.profile') }}">
+                                            <i class="fas fa-user"></i> Profile
+                                        </a>
+                                        {% if current_user.is_admin() %}
+                                            <a href="{{ url_for('main.admin_dashboard') }}">
+                                                <i class="fas fa-cog"></i> Admin Dashboard
+                                            </a>
+                                        {% endif %}
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{{ url_for('auth.logout') }}">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
+                                <a href="{{ url_for('auth.register') }}" class="nav-link btn btn-primary">Sign Up</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endblock navbar %}
+        </nav>
+
+        <main class="main-content">
+            {% block main %}
+                
+            {% endblock main %}
+        </main>
+
+        <footer class="footer">
+            {% block footer %}
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h4>A Place For Me</h4>
+                            <p>A digital sanctuary where faith meets community.</p>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Quick Links</h4>
+                            <ul>
+                                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                                <li><a href="{{ url_for('main.blogs') }}">Blog</a></li>
+                                <li><a href="{{ url_for('main.god_stories') }}">Stories</a></li>
+                                <li><a href="{{ url_for('main.music') }}">Music</a></li>
+                                <li><a href="{{ url_for('main.radio') }}">Radio</a></li>
+                                <li><a href="{{ url_for('main.testimonials') }}">Testimonials</a></li>
+                                <li><a href="{{ url_for('main.about') }}">About</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-section">
+                            <h4>Connect</h4>
+                            <p>Join our community of faith and inspiration.</p>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2025 A Place For Me. All rights reserved.</p>
+                    </div>
+                </div>
+            {% endblock footer %}
+        </footer>
+            
+        {% endblock page_wrapper %}
+    </div>
+
+    <!-- Custom JS -->
+    {% block custom_js %}
+        
+    {% endblock custom_js %}
+    
+    <!-- Mobile Navigation JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('nav-toggle');
+            const navLinks = document.getElementById('nav-links');
+            
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    navToggle.classList.toggle('active');
+                });
+                
+                // Close mobile menu when clicking on a link
+                const navLinkItems = navLinks.querySelectorAll('.nav-link');
+                navLinkItems.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    });
+                });
+            }
+        });
+        
+        // User menu toggle
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('user-menu-dropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('user-menu-dropdown');
+            
+            if (userMenu && dropdown && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
