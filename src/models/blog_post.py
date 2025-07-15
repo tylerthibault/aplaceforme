@@ -1,6 +1,7 @@
 from datetime import datetime
 from src import db
 from typing import Optional
+import base64
 
 
 class BlogPost(db.Model):
@@ -19,7 +20,7 @@ class BlogPost(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Optional fields
-    image_path = db.Column(db.String(200))
+    image_data = db.Column(db.LargeBinary)  # Store image as BLOB
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     status = db.Column(db.String(20), default='draft')  # draft, published
     publish_at = db.Column(db.DateTime)
@@ -84,6 +85,17 @@ class BlogPost(db.Model):
         if len(self.content) <= length:
             return self.content
         return self.content[:length] + '...'
+    
+    def get_base64_image_data(self) -> Optional[str]:
+        """
+        Convert the binary image data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the image data, or None if no data exists.
+        """
+        if not self.image_data:
+            return None
+        return base64.b64encode(self.image_data).decode('utf-8')
     
     def __repr__(self) -> str:
         return f'<BlogPost {self.title}>'

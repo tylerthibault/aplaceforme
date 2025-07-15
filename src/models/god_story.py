@@ -1,6 +1,7 @@
 from datetime import datetime
 from src import db
 from typing import Optional
+import base64
 
 
 class GodStory(db.Model):
@@ -18,10 +19,15 @@ class GodStory(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    # Optional fields
+    author_name = db.Column(db.String(100))
+    category = db.Column(db.String(50))
+    tags = db.Column(db.String(500))  # Comma-separated tags
+
     # Optional fields - multimedia support
-    audio_path = db.Column(db.String(200))
-    video_path = db.Column(db.String(200))
-    image_path = db.Column(db.String(200))
+    audio_data = db.Column(db.LargeBinary)  # Store audio as BLOB
+    video_data = db.Column(db.LargeBinary)  # Store video as BLOB
+    image_data = db.Column(db.LargeBinary)  # Store image as BLOB
     
     # Publishing and scheduling
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -62,7 +68,7 @@ class GodStory(db.Model):
         Returns:
             bool: True if has audio, False otherwise
         """
-        return bool(self.audio_path)
+        return bool(self.audio_data)
     
     def has_video(self) -> bool:
         """
@@ -71,7 +77,7 @@ class GodStory(db.Model):
         Returns:
             bool: True if has video, False otherwise
         """
-        return bool(self.video_path)
+        return bool(self.video_data)
     
     def has_image(self) -> bool:
         """
@@ -80,7 +86,7 @@ class GodStory(db.Model):
         Returns:
             bool: True if has image, False otherwise
         """
-        return bool(self.image_path)
+        return bool(self.image_data)
     
     def is_multimedia(self) -> bool:
         """
@@ -115,6 +121,39 @@ class GodStory(db.Model):
         if len(self.content) <= length:
             return self.content
         return self.content[:length] + '...'
+    
+    def get_base64_audio_data(self) -> Optional[str]:
+        """
+        Convert the binary audio data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the audio data, or None if no data exists.
+        """
+        if not self.audio_data:
+            return None
+        return base64.b64encode(self.audio_data).decode('utf-8')
+
+    def get_base64_video_data(self) -> Optional[str]:
+        """
+        Convert the binary video data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the video data, or None if no data exists.
+        """
+        if not self.video_data:
+            return None
+        return base64.b64encode(self.video_data).decode('utf-8')
+
+    def get_base64_image_data(self) -> Optional[str]:
+        """
+        Convert the binary image data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the image data, or None if no data exists.
+        """
+        if not self.image_data:
+            return None
+        return base64.b64encode(self.image_data).decode('utf-8')
     
     def __repr__(self) -> str:
         return f'<GodStory {self.title}>'

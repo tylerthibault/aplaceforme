@@ -1,6 +1,7 @@
 from datetime import datetime
 from src import db
 from typing import Optional
+import base64
 
 
 class Song(db.Model):
@@ -14,7 +15,7 @@ class Song(db.Model):
     # Required fields
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    file_path = db.Column(db.String(200), nullable=False)
+    file_data = db.Column(db.LargeBinary, nullable=False)  # Store audio file as BLOB
     uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -99,6 +100,17 @@ class Song(db.Model):
             str: Album name or 'Unknown Album'
         """
         return self.album if self.album else 'Unknown Album'
+    
+    def get_base64_file_data(self) -> Optional[str]:
+        """
+        Convert the binary file data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the file data, or None if no data exists.
+        """
+        if not self.file_data:
+            return None
+        return base64.b64encode(self.file_data).decode('utf-8')
     
     def __repr__(self) -> str:
         return f'<Song {self.title}>'

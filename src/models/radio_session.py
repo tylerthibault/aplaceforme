@@ -1,6 +1,7 @@
 from datetime import datetime
 from src import db
 from typing import Optional
+import base64
 
 
 class RadioSession(db.Model):
@@ -14,7 +15,7 @@ class RadioSession(db.Model):
     # Required fields
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    file_path = db.Column(db.String(200), nullable=False)
+    file_data = db.Column(db.LargeBinary, nullable=False)  # Store audio file as BLOB
     uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -32,7 +33,7 @@ class RadioSession(db.Model):
     
     # Metadata
     tags = db.Column(db.String(500))  # Comma-separated tags
-    thumbnail_path = db.Column(db.String(200))
+    thumbnail_data = db.Column(db.LargeBinary)  # Store thumbnail as BLOB
     download_count = db.Column(db.Integer, default=0)
     
     def publish(self) -> None:
@@ -138,7 +139,7 @@ class RadioSession(db.Model):
         Returns:
             bool: True if has thumbnail, False otherwise
         """
-        return bool(self.thumbnail_path)
+        return bool(self.thumbnail_data)
     
     def get_description_preview(self, length: int = 150) -> str:
         """
@@ -156,6 +157,28 @@ class RadioSession(db.Model):
         if len(self.description) <= length:
             return self.description
         return self.description[:length] + '...'
+    
+    def get_base64_file_data(self) -> Optional[str]:
+        """
+        Convert the binary file data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the file data, or None if no data exists.
+        """
+        if not self.file_data:
+            return None
+        return base64.b64encode(self.file_data).decode('utf-8')
+
+    def get_base64_thumbnail_data(self) -> Optional[str]:
+        """
+        Convert the binary thumbnail data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the thumbnail data, or None if no data exists.
+        """
+        if not self.thumbnail_data:
+            return None
+        return base64.b64encode(self.thumbnail_data).decode('utf-8')
     
     def __repr__(self) -> str:
         return f'<RadioSession {self.title}>'

@@ -381,9 +381,107 @@ def admin_god_story_new():
         return redirect(url_for('main.index'))
     
     if request.method == 'POST':
-        # TODO: Implement God story creation
-        flash('God story creation not yet implemented.', 'info')
-        return redirect(url_for('main.admin_god_stories'))
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
+        status = request.form.get('status', 'draft')
+        author_name = request.form.get('author_name', '').strip()
+        category = request.form.get('category', '').strip()
+        tags = request.form.get('tags', '').strip()
+        
+        # Handle file uploads
+        featured_image = request.files.get('featured_image')
+        audio_file = request.files.get('audio_file')
+        video_file = request.files.get('video_file')
+        
+        # Validate inputs
+        errors = []
+        
+        if not title:
+            errors.append('Title is required')
+        elif len(title) > 200:
+            errors.append('Title must be less than 200 characters')
+            
+        if not content:
+            errors.append('Content is required')
+            
+        # Validate file uploads
+        allowed_image_types = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
+        allowed_audio_types = {'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4'}
+        allowed_video_types = {'video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'}
+        
+        if featured_image and featured_image.filename:
+            if featured_image.content_type not in allowed_image_types:
+                errors.append('Invalid image format. Please use JPEG, PNG, GIF, or WebP.')
+            elif len(featured_image.read()) > 5 * 1024 * 1024:  # 5MB limit
+                errors.append('Image file too large. Maximum size is 5MB.')
+            featured_image.seek(0)  # Reset file pointer
+            
+        if audio_file and audio_file.filename:
+            if audio_file.content_type not in allowed_audio_types:
+                errors.append('Invalid audio format. Please use MP3, WAV, OGG, or M4A.')
+            elif len(audio_file.read()) > 50 * 1024 * 1024:  # 50MB limit
+                errors.append('Audio file too large. Maximum size is 50MB.')
+            audio_file.seek(0)  # Reset file pointer
+            
+        if video_file and video_file.filename:
+            if video_file.content_type not in allowed_video_types:
+                errors.append('Invalid video format. Please use MP4, WebM, MOV, or AVI.')
+            elif len(video_file.read()) > 100 * 1024 * 1024:  # 100MB limit
+                errors.append('Video file too large. Maximum size is 100MB.')
+            video_file.seek(0)  # Reset file pointer
+            
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+            return render_template('admin/forms/god_story_form.html', 
+                                 title='Add New God Story',
+                                 form_title='Add New God Story',
+                                 form_description='Share a new story of God\'s faithfulness.',
+                                 cancel_url=url_for('main.admin_god_stories'),
+                                 god_story_title=title,
+                                 god_story_content=content)
+        
+        # Create new God story
+        try:
+            god_story = GodStory(
+                title=title,
+                content=content,
+                author_id=current_user.id,
+                status=status,
+                author_name=author_name if author_name else current_user.username,
+                category=category if category else None,
+                tags=tags if tags else None
+            )
+            
+            # Handle file data
+            if featured_image and featured_image.filename:
+                god_story.image_data = featured_image.read()
+                
+            if audio_file and audio_file.filename:
+                god_story.audio_data = audio_file.read()
+                
+            if video_file and video_file.filename:
+                god_story.video_data = video_file.read()
+            
+            if status == 'published':
+                god_story.publish()
+            
+            db.session.add(god_story)
+            db.session.commit()
+            
+            flash('God story created successfully!', 'success')
+            return redirect(url_for('main.admin_god_stories'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Failed to create God story. Please try again.', 'error')
+            return render_template('admin/forms/god_story_form.html', 
+                                 title='Add New God Story',
+                                 form_title='Add New God Story',
+                                 form_description='Share a new story of God\'s faithfulness.',
+                                 cancel_url=url_for('main.admin_god_stories'),
+                                 god_story_title=title,
+                                 god_story_content=content)
     
     return render_template('admin/forms/god_story_form.html', 
                          title='Add New God Story',
@@ -403,9 +501,103 @@ def admin_god_story_edit(story_id):
     god_story = GodStory.query.get_or_404(story_id)
     
     if request.method == 'POST':
-        # TODO: Implement God story editing
-        flash('God story editing not yet implemented.', 'info')
-        return redirect(url_for('main.admin_god_stories'))
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
+        status = request.form.get('status', 'draft')
+        author_name = request.form.get('author_name', '').strip()
+        category = request.form.get('category', '').strip()
+        tags = request.form.get('tags', '').strip()
+        
+        # Handle file uploads
+        featured_image = request.files.get('featured_image')
+        audio_file = request.files.get('audio_file')
+        video_file = request.files.get('video_file')
+        
+        # Validate inputs
+        errors = []
+        
+        if not title:
+            errors.append('Title is required')
+        elif len(title) > 200:
+            errors.append('Title must be less than 200 characters')
+            
+        if not content:
+            errors.append('Content is required')
+            
+        # Validate file uploads
+        allowed_image_types = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
+        allowed_audio_types = {'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4'}
+        allowed_video_types = {'video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'}
+        
+        if featured_image and featured_image.filename:
+            if featured_image.content_type not in allowed_image_types:
+                errors.append('Invalid image format. Please use JPEG, PNG, GIF, or WebP.')
+            elif len(featured_image.read()) > 5 * 1024 * 1024:  # 5MB limit
+                errors.append('Image file too large. Maximum size is 5MB.')
+            featured_image.seek(0)  # Reset file pointer
+            
+        if audio_file and audio_file.filename:
+            if audio_file.content_type not in allowed_audio_types:
+                errors.append('Invalid audio format. Please use MP3, WAV, OGG, or M4A.')
+            elif len(audio_file.read()) > 50 * 1024 * 1024:  # 50MB limit
+                errors.append('Audio file too large. Maximum size is 50MB.')
+            audio_file.seek(0)  # Reset file pointer
+            
+        if video_file and video_file.filename:
+            if video_file.content_type not in allowed_video_types:
+                errors.append('Invalid video format. Please use MP4, WebM, MOV, or AVI.')
+            elif len(video_file.read()) > 100 * 1024 * 1024:  # 100MB limit
+                errors.append('Video file too large. Maximum size is 100MB.')
+            video_file.seek(0)  # Reset file pointer
+            
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+            return render_template('admin/forms/god_story_form.html', 
+                                 god_story=god_story,
+                                 title='Edit God Story',
+                                 form_title='Edit God Story',
+                                 form_description='Edit this God story.',
+                                 cancel_url=url_for('main.admin_god_stories'))
+        
+        # Update God story
+        try:
+            god_story.title = title
+            god_story.content = content
+            god_story.status = status
+            god_story.author_name = author_name if author_name else current_user.username
+            god_story.category = category if category else None
+            god_story.tags = tags if tags else None
+            
+            # Handle file data updates
+            if featured_image and featured_image.filename:
+                god_story.image_data = featured_image.read()
+                
+            if audio_file and audio_file.filename:
+                god_story.audio_data = audio_file.read()
+                
+            if video_file and video_file.filename:
+                god_story.video_data = video_file.read()
+            
+            if status == 'published' and not god_story.is_published:
+                god_story.publish()
+            elif status == 'draft' and god_story.is_published:
+                god_story.unpublish()
+            
+            db.session.commit()
+            
+            flash('God story updated successfully!', 'success')
+            return redirect(url_for('main.admin_god_stories'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Failed to update God story. Please try again.', 'error')
+            return render_template('admin/forms/god_story_form.html', 
+                                 god_story=god_story,
+                                 title='Edit God Story',
+                                 form_title='Edit God Story',
+                                 form_description='Edit this God story.',
+                                 cancel_url=url_for('main.admin_god_stories'))
     
     return render_template('admin/forms/god_story_form.html', 
                          god_story=god_story,

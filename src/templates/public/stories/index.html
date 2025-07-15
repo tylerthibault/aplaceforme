@@ -18,16 +18,60 @@
             <div class="content-grid">
                 {% for story in stories.items %}
                 <article class="content-card story-card">
+                    {% if story.has_image() %}
+                    <div class="card-image">
+                        <img src="data:image/jpeg;base64,{{ story.get_base64_image_data() }}" 
+                             alt="{{ story.title }}" loading="lazy">
+                        <div class="image-overlay">
+                            <span class="story-badge">God Story</span>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="card-content">
+                        {% if not story.has_image() %}
+                        <div class="story-badge-inline">God Story</div>
+                        {% endif %}
                         <h3><a href="{{ url_for('main.story_detail', id=story.id) }}">{{ story.title }}</a></h3>
                         <div class="card-meta">
-                            <span class="author">Shared by {{ story.author.username }}</span>
-                            <span class="date">{{ story.created_at.strftime('%B %d, %Y') }}</span>
+                            <span class="author">
+                                <i class="fas fa-user"></i>
+                                {{ story.author_name or story.author.username }}
+                            </span>
+                            <span class="date">
+                                <i class="fas fa-calendar"></i>
+                                {{ story.created_at.strftime('%B %d, %Y') }}
+                            </span>
+                            {% if story.category %}
+                            <span class="category">
+                                <i class="fas fa-tag"></i>
+                                {{ story.category.title() }}
+                            </span>
+                            {% endif %}
                         </div>
-                        <p class="excerpt">{{ story.get_excerpt(200) }}</p>
+                        <p class="excerpt">{{ story.get_excerpt(150) }}</p>
                         <div class="card-footer">
-                            <a href="{{ url_for('main.story_detail', id=story.id) }}" class="read-more">Read Full Story →</a>
-                            <span class="story-badge">God Story</span>
+                            <a href="{{ url_for('main.story_detail', id=story.id) }}" class="read-more">
+                                Read Full Story <i class="fas fa-arrow-right"></i>
+                            </a>
+                            {% if story.is_multimedia() %}
+                            <div class="media-indicators">
+                                {% if story.has_audio() %}
+                                <span class="media-icon" title="Includes Audio">
+                                    <i class="fas fa-volume-up"></i>
+                                </span>
+                                {% endif %}
+                                {% if story.has_video() %}
+                                <span class="media-icon" title="Includes Video">
+                                    <i class="fas fa-video"></i>
+                                </span>
+                                {% endif %}
+                                {% if story.has_image() %}
+                                <span class="media-icon" title="Includes Image">
+                                    <i class="fas fa-image"></i>
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </article>

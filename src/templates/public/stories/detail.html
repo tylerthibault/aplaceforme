@@ -9,14 +9,70 @@
             <div class="story-badge-large">God Story</div>
             <h1>{{ story.title }}</h1>
             <div class="article-meta">
-                <span class="author">Shared by {{ story.author.username }}</span>
-                <span class="date">{{ story.created_at.strftime('%B %d, %Y') }}</span>
+                <span class="author">
+                    <i class="fas fa-user"></i>
+                    Shared by {{ story.author_name or story.author.username }}
+                </span>
+                <span class="date">
+                    <i class="fas fa-calendar"></i>
+                    {{ story.created_at.strftime('%B %d, %Y') }}
+                </span>
+                {% if story.category %}
+                <span class="category">
+                    <i class="fas fa-tag"></i>
+                    {{ story.category.title() }}
+                </span>
+                {% endif %}
             </div>
         </header>
+
+        {% if story.has_image() %}
+        <div class="featured-image">
+            <img src="data:image/jpeg;base64,{{ story.get_base64_image_data() }}" 
+                 alt="{{ story.title }}" class="story-image">
+        </div>
+        {% endif %}
 
         <div class="article-content story-content">
             {{ story.content | nl2br | safe }}
         </div>
+
+        {% if story.has_audio() or story.has_video() %}
+        <div class="multimedia-section">
+            <h3>Multimedia Content</h3>
+            
+            {% if story.has_audio() %}
+            <div class="audio-content">
+                <h4><i class="fas fa-volume-up"></i> Audio Testimony</h4>
+                <audio controls preload="metadata" class="story-audio">
+                    <source src="data:audio/mpeg;base64,{{ story.get_base64_audio_data() }}" type="audio/mpeg">
+                    <p>Your browser doesn't support HTML5 audio. Here is a <a href="data:audio/mpeg;base64,{{ story.get_base64_audio_data() }}">link to the audio</a> instead.</p>
+                </audio>
+            </div>
+            {% endif %}
+
+            {% if story.has_video() %}
+            <div class="video-content">
+                <h4><i class="fas fa-video"></i> Video Testimony</h4>
+                <video controls preload="metadata" class="story-video">
+                    <source src="data:video/mp4;base64,{{ story.get_base64_video_data() }}" type="video/mp4">
+                    <p>Your browser doesn't support HTML5 video. Here is a <a href="data:video/mp4;base64,{{ story.get_base64_video_data() }}">link to the video</a> instead.</p>
+                </video>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if story.tags %}
+        <div class="tags-section">
+            <h4>Tags</h4>
+            <div class="tag-list">
+                {% for tag in story.tags.split(',') %}
+                <span class="tag">{{ tag.strip() }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
         <footer class="article-footer">
             <div class="story-response">
