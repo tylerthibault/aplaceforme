@@ -86,10 +86,8 @@ def init_blueprints(app: Flask) -> None:
 
     :param app: Flask app instance.
     """
-    from src.controllers.main import main_bp
-    from src.controllers.auth import auth_bp
-    app.register_blueprint(main_bp)
-    app.register_blueprint(auth_bp)
+    from src.controllers import register_blueprints
+    register_blueprints(app)
 
 # init extensions
 def init_extensions(app: Flask) -> None:
