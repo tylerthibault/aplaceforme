@@ -34,8 +34,7 @@
         <div class="audio-player-wrapper">
             <div class="audio-player">
                 <audio controls preload="metadata" style="width: 100%;">
-                    <source src="{{ session.file_path }}" type="audio/mpeg">
-                    <source src="{{ session.file_path }}" type="audio/ogg">
+                    <source src="{{ url_for('main.serve_radio_session_audio', session_id=session.id) }}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
             </div>

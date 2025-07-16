@@ -1,14 +1,9 @@
 from flask import Blueprint, render_template, request, abort, flash, redirect, url_for, Response
 from typing import Tuple
 from datetime import datetime
-import logging
 from src.models import BlogPost, GodStory, Song, Testimonial, RadioSession, User
 from src import db
 from flask_login import login_required, current_user
-
-# Set up logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 # Create main blueprint
 main_bp = Blueprint('main', __name__)
@@ -397,8 +392,6 @@ def admin_radio_session_new():
         return redirect(url_for('main.index'))
     
     if request.method == 'POST':
-        logger.info("Processing POST request for new radio session")
-        
         title = request.form.get('title', '').strip()
         description = request.form.get('description', '').strip()
         host = request.form.get('host', '').strip()
@@ -416,17 +409,12 @@ def admin_radio_session_new():
         allow_download = bool(request.form.get('allow_download'))
         allow_comments = bool(request.form.get('allow_comments'))
         
-        logger.debug(f"Form data received - title: '{title}', status: '{status}', episode_number: '{episode_number}'")
-        
         # Handle file uploads
         audio_file = request.files.get('audio_file')
         thumbnail = request.files.get('thumbnail')
         
-        logger.debug(f"Files received - audio_file: {audio_file.filename if audio_file else None}, thumbnail: {thumbnail.filename if thumbnail else None}")
-        
         # Validate inputs
         errors = []
-        logger.info("Starting form validation")
         
         if not title:
             errors.append('Title is required')
@@ -498,7 +486,6 @@ def admin_radio_session_new():
             thumbnail.seek(0)  # Reset file pointer
             
         if errors:
-            logger.warning(f"Validation errors found: {errors}")
             for error in errors:
                 flash(error, 'error')
             return render_template('admin/forms/radio_session_form.html', 
@@ -507,76 +494,51 @@ def admin_radio_session_new():
                                  form_description='Create a new radio episode.',
                                  cancel_url=url_for('main.admin_radio_sessions'))
         
-        logger.info("Form validation passed successfully")
-        
         # Create new radio session
         try:
-            logger.info(f"Starting radio session creation for user {current_user.id}")
-            logger.debug(f"Radio session data: title='{title}', host='{host}', status='{status}', featured={featured}")
-            
             radio_session = RadioSession(
                 title=title,
                 description=description if description else None,
+                host=host if host else None,
+                guests=guests if guests else None,
+                category=category if category else None,
+                bible_references=bible_references if bible_references else None,
+                show_notes=show_notes if show_notes else None,
                 episode_number=episode_number,
                 season_number=season_number,
                 duration=duration,
                 status=status,
+                featured=featured,
+                allow_download=allow_download,
+                allow_comments=allow_comments,
                 uploaded_by=current_user.id
             )
-            logger.info("RadioSession object created successfully")
-            
-            # Log fields that are not stored in the model yet
-            if host or guests or category or bible_references or show_notes:
-                logger.warning(f"Additional fields ignored (not in model): host='{host}', guests='{guests}', category='{category}', bible_references='{bible_references}', show_notes='{show_notes}'")
-            if featured or allow_download or allow_comments:
-                logger.warning(f"Boolean flags ignored (not in model): featured={featured}, allow_download={allow_download}, allow_comments={allow_comments}")
             
             # Set tags
             if tags:
-                logger.debug(f"Setting tags: {tags}")
                 radio_session.set_tags([tag.strip() for tag in tags.split(',') if tag.strip()])
-                logger.info(f"Tags set successfully: {radio_session.get_tags_list()}")
             
             # Handle file data
             if audio_file and audio_file.filename:
-                logger.info(f"Processing audio file: {audio_file.filename}, content_type: {audio_file.content_type}")
-                audio_data = audio_file.read()
-                logger.debug(f"Audio file size: {len(audio_data)} bytes")
-                radio_session.file_data = audio_data
-                logger.info("Audio file data set successfully")
+                radio_session.file_data = audio_file.read()
                 
             if thumbnail and thumbnail.filename:
-                logger.info(f"Processing thumbnail: {thumbnail.filename}, content_type: {thumbnail.content_type}")
-                thumbnail_data = thumbnail.read()
-                logger.debug(f"Thumbnail file size: {len(thumbnail_data)} bytes")
-                radio_session.thumbnail_data = thumbnail_data
-                logger.info("Thumbnail data set successfully")
+                radio_session.thumbnail_data = thumbnail.read()
             
             # Handle publishing
             if status == 'published':
-                logger.info("Publishing radio session immediately")
                 radio_session.publish()
-                logger.info("Radio session published successfully")
             elif status == 'scheduled' and parsed_publish_at:
-                logger.info(f"Scheduling radio session for: {parsed_publish_at}")
                 radio_session.schedule_publish(parsed_publish_at)
-                logger.info("Radio session scheduled successfully")
             
-            logger.info("Adding radio session to database session")
             db.session.add(radio_session)
-            
-            logger.info("Committing changes to database")
             db.session.commit()
-            logger.info(f"Radio session created successfully with ID: {radio_session.id}")
-            logger.info(f"Saved fields - title: '{radio_session.title}', episode: {radio_session.episode_number}, duration: {radio_session.duration}")
             
             flash('Radio session created successfully!', 'success')
             return redirect(url_for('main.admin_radio_sessions'))
             
         except Exception as e:
-            logger.error(f"Error creating radio session: {str(e)}", exc_info=True)
             db.session.rollback()
-            logger.info("Database session rolled back")
             flash('Failed to create radio session. Please try again.', 'error')
             return render_template('admin/forms/radio_session_form.html', 
                                  title='Add New Radio Session',
@@ -706,10 +668,18 @@ def admin_radio_session_edit(session_id):
         try:
             radio_session.title = title
             radio_session.description = description if description else None
+            radio_session.host = host if host else None
+            radio_session.guests = guests if guests else None
+            radio_session.category = category if category else None
+            radio_session.bible_references = bible_references if bible_references else None
+            radio_session.show_notes = show_notes if show_notes else None
             radio_session.episode_number = episode_number
             radio_session.season_number = season_number
             radio_session.duration = duration
             radio_session.status = status
+            radio_session.featured = featured
+            radio_session.allow_download = allow_download
+            radio_session.allow_comments = allow_comments
             
             # Set tags
             if tags:
@@ -819,267 +789,3 @@ def serve_story_audio(story_id):
 
 
 # TODO: Add other admin routes for creating/editing blog posts, god stories, songs, testimonials, and users
-
-@main_bp.route('/admin/users/new', methods=['GET', 'POST'])
-@login_required
-def admin_user_new():
-    """Add new user form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # TODO: Implement user creation logic
-        flash('User creation not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_users'))
-    
-    # TODO: Create user form template
-    flash('User creation form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_users'))
-
-
-@main_bp.route('/admin/users/<int:user_id>/edit', methods=['GET', 'POST'])
-@login_required
-def admin_user_edit(user_id):
-    """Edit user form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    user = User.query.get_or_404(user_id)
-    
-    if request.method == 'POST':
-        # TODO: Implement user edit logic
-        flash('User editing not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_users'))
-    
-    # TODO: Create user edit form template
-    flash('User editing form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_users'))
-
-
-@main_bp.route('/admin/users/<int:user_id>/delete', methods=['POST'])
-@login_required
-def admin_user_delete(user_id):
-    """Delete user."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    user = User.query.get_or_404(user_id)
-    
-    # TODO: Implement user deletion logic
-    flash('User deletion not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_users'))
-
-
-@main_bp.route('/admin/blog-posts/new', methods=['GET', 'POST'])
-@login_required
-def admin_blog_post_new():
-    """Add new blog post form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # TODO: Implement blog post creation logic
-        flash('Blog post creation not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_blog_posts'))
-    
-    # TODO: Create blog post form template
-    flash('Blog post creation form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_blog_posts'))
-
-
-@main_bp.route('/admin/blog-posts/<int:post_id>/edit', methods=['GET', 'POST'])
-@login_required
-def admin_blog_post_edit(post_id):
-    """Edit blog post form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    post = BlogPost.query.get_or_404(post_id)
-    
-    if request.method == 'POST':
-        # TODO: Implement blog post edit logic
-        flash('Blog post editing not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_blog_posts'))
-    
-    # TODO: Create blog post edit form template
-    flash('Blog post editing form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_blog_posts'))
-
-
-@main_bp.route('/admin/blog-posts/<int:post_id>/delete', methods=['POST'])
-@login_required
-def admin_blog_post_delete(post_id):
-    """Delete blog post."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    post = BlogPost.query.get_or_404(post_id)
-    
-    # TODO: Implement blog post deletion logic
-    flash('Blog post deletion not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_blog_posts'))
-
-
-@main_bp.route('/admin/god-stories/new', methods=['GET', 'POST'])
-@login_required
-def admin_god_story_new():
-    """Add new God story form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # TODO: Implement God story creation logic
-        flash('God story creation not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_god_stories'))
-    
-    # TODO: Create God story form template
-    flash('God story creation form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_god_stories'))
-
-
-@main_bp.route('/admin/god-stories/<int:story_id>/edit', methods=['GET', 'POST'])
-@login_required
-def admin_god_story_edit(story_id):
-    """Edit God story form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    story = GodStory.query.get_or_404(story_id)
-    
-    if request.method == 'POST':
-        # TODO: Implement God story edit logic
-        flash('God story editing not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_god_stories'))
-    
-    # TODO: Create God story edit form template
-    flash('God story editing form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_god_stories'))
-
-
-@main_bp.route('/admin/god-stories/<int:story_id>/delete', methods=['POST'])
-@login_required
-def admin_god_story_delete(story_id):
-    """Delete God story."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    story = GodStory.query.get_or_404(story_id)
-    
-    # TODO: Implement God story deletion logic
-    flash('God story deletion not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_god_stories'))
-
-
-@main_bp.route('/admin/songs/new', methods=['GET', 'POST'])
-@login_required
-def admin_song_new():
-    """Add new song form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # TODO: Implement song creation logic
-        flash('Song creation not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_songs'))
-    
-    # TODO: Create song form template
-    flash('Song creation form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_songs'))
-
-
-@main_bp.route('/admin/songs/<int:song_id>/edit', methods=['GET', 'POST'])
-@login_required
-def admin_song_edit(song_id):
-    """Edit song form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    song = Song.query.get_or_404(song_id)
-    
-    if request.method == 'POST':
-        # TODO: Implement song edit logic
-        flash('Song editing not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_songs'))
-    
-    # TODO: Create song edit form template
-    flash('Song editing form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_songs'))
-
-
-@main_bp.route('/admin/songs/<int:song_id>/delete', methods=['POST'])
-@login_required
-def admin_song_delete(song_id):
-    """Delete song."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    song = Song.query.get_or_404(song_id)
-    
-    # TODO: Implement song deletion logic
-    flash('Song deletion not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_songs'))
-
-
-@main_bp.route('/admin/testimonials/new', methods=['GET', 'POST'])
-@login_required
-def admin_testimonial_new():
-    """Add new testimonial form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    if request.method == 'POST':
-        # TODO: Implement testimonial creation logic
-        flash('Testimonial creation not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_testimonials'))
-    
-    # TODO: Create testimonial form template
-    flash('Testimonial creation form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_testimonials'))
-
-
-@main_bp.route('/admin/testimonials/<int:testimonial_id>/edit', methods=['GET', 'POST'])
-@login_required
-def admin_testimonial_edit(testimonial_id):
-    """Edit testimonial form and handler."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    testimonial = Testimonial.query.get_or_404(testimonial_id)
-    
-    if request.method == 'POST':
-        # TODO: Implement testimonial edit logic
-        flash('Testimonial editing not yet implemented.', 'warning')
-        return redirect(url_for('main.admin_testimonials'))
-    
-    # TODO: Create testimonial edit form template
-    flash('Testimonial editing form not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_testimonials'))
-
-
-@main_bp.route('/admin/testimonials/<int:testimonial_id>/delete', methods=['POST'])
-@login_required
-def admin_testimonial_delete(testimonial_id):
-    """Delete testimonial."""
-    if not current_user.is_admin():
-        flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('main.index'))
-    
-    testimonial = Testimonial.query.get_or_404(testimonial_id)
-    
-    # TODO: Implement testimonial deletion logic
-    flash('Testimonial deletion not yet implemented.', 'warning')
-    return redirect(url_for('main.admin_testimonials'))

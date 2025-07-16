@@ -45,8 +45,11 @@
             <div class="audio-content">
                 <h4><i class="fas fa-volume-up"></i> Audio Testimony</h4>
                 <audio controls preload="metadata" class="story-audio">
-                    <source src="data:audio/mpeg;base64,{{ story.get_base64_audio_data() }}" type="audio/mpeg">
-                    <p>Your browser doesn't support HTML5 audio. Here is a <a href="data:audio/mpeg;base64,{{ story.get_base64_audio_data() }}">link to the audio</a> instead.</p>
+                    <source src="{{ url_for('main.serve_story_audio', story_id=story.id) }}" type="audio/mp4">
+                    <source src="{{ url_for('main.serve_story_audio', story_id=story.id) }}" type="audio/mpeg">
+                    <source src="{{ url_for('main.serve_story_audio', story_id=story.id) }}" type="audio/wav">
+                    <source src="{{ url_for('main.serve_story_audio', story_id=story.id) }}" type="audio/ogg">
+                    <p>Your browser doesn't support HTML5 audio. Here is a <a href="{{ url_for('main.serve_story_audio', story_id=story.id) }}">link to the audio</a> instead.</p>
                 </audio>
             </div>
             {% endif %}
@@ -54,9 +57,13 @@
             {% if story.has_video() %}
             <div class="video-content">
                 <h4><i class="fas fa-video"></i> Video Testimony</h4>
-                <video controls preload="metadata" class="story-video">
-                    <source src="data:video/mp4;base64,{{ story.get_base64_video_data() }}" type="video/mp4">
-                    <p>Your browser doesn't support HTML5 video. Here is a <a href="data:video/mp4;base64,{{ story.get_base64_video_data() }}">link to the video</a> instead.</p>
+                <div class="video-info">
+                    <p><i class="fas fa-info-circle"></i> <strong>Note:</strong> If you can't hear audio, the video may have been uploaded without sound. Please check your device volume or contact us if you expected audio content.</p>
+                </div>
+                <video controls preload="metadata" class="story-video" controlslist="nodownload">
+                    <source src="{{ url_for('main.serve_story_video', story_id=story.id) }}" type="video/mp4">
+                    <source src="{{ url_for('main.serve_story_video', story_id=story.id) }}" type="video/webm">
+                    <p>Your browser doesn't support HTML5 video. Here is a <a href="{{ url_for('main.serve_story_video', story_id=story.id) }}">link to the video</a> instead.</p>
                 </video>
             </div>
             {% endif %}
@@ -121,3 +128,80 @@
     </div>
 </section>
 {% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('.story-video');
+    
+    if (video) {
+        // Ensure audio is enabled
+        video.muted = false;
+        video.volume = 1.0;
+        
+        // Handle video load events
+        video.addEventListener('loadstart', function() {
+            console.log('Video loading started');
+        });
+        
+        video.addEventListener('canplay', function() {
+            console.log('Video can start playing');
+        });
+        
+        video.addEventListener('error', function(e) {
+            console.error('Video error:', e);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'video-error';
+            errorDiv.innerHTML = `
+                <p><i class="fas fa-exclamation-triangle"></i> There was an issue loading this video.</p>
+                <p>Please try refreshing the page or contact support if the problem persists.</p>
+            `;
+            video.parentNode.replaceChild(errorDiv, video);
+        });
+        
+        // Handle play event to ensure audio is unmuted
+        video.addEventListener('play', function() {
+            video.muted = false;
+            console.log('Video playback started');
+        });
+        
+        // Add click handler to unmute if needed
+        video.addEventListener('click', function() {
+            if (video.muted) {
+                video.muted = false;
+                console.log('Video unmuted');
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.video-error {
+    padding: 2rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.video-error i {
+    color: #ffc107;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.video-info {
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #0066cc;
+}
+
+.video-info i {
+    color: #0066cc;
+    margin-right: 0.5rem;
+}
+</style>

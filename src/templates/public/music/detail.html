@@ -14,21 +14,27 @@
                 {% endif %}
             </div>
 
-            <!-- Audio Player Placeholder -->
+            <!-- Audio Player -->
             <div class="audio-player">
+                {% if song.has_audio() %}
+                <audio controls preload="metadata" class="song-audio">
+                    <source src="{{ url_for('main.serve_song_audio', song_id=song.id) }}" type="audio/mp4">
+                    <source src="{{ url_for('main.serve_song_audio', song_id=song.id) }}" type="audio/mpeg">
+                    <source src="{{ url_for('main.serve_song_audio', song_id=song.id) }}" type="audio/wav">
+                    <source src="{{ url_for('main.serve_song_audio', song_id=song.id) }}" type="audio/ogg">
+                    <p>Your browser doesn't support HTML5 audio. Here is a <a href="{{ url_for('main.serve_song_audio', song_id=song.id) }}">link to the audio</a> instead.</p>
+                </audio>
+                {% else %}
                 <div class="player-placeholder">
                     <div class="play-button">
                         <i class="fas fa-play"></i>
                     </div>
                     <div class="player-info">
-                        <p><strong>Audio Player</strong></p>
-                        <p>File: {{ song.file_path }}</p>
-                        {% if song.duration %}
-                            <p>Duration: {{ (song.duration // 60) }}:{{ '%02d' | format(song.duration % 60) }}</p>
-                        {% endif %}
+                        <p><strong>Audio not available</strong></p>
+                        <p>This song does not have an audio file uploaded.</p>
                     </div>
                 </div>
-                <p class="player-note"><em>Note: Audio streaming functionality would be implemented here with an HTML5 audio player or third-party service.</em></p>
+                {% endif %}
             </div>
 
             <div class="music-meta">

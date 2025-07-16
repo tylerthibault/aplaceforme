@@ -25,6 +25,7 @@ class Song(db.Model):
     album = db.Column(db.String(200))
     genre = db.Column(db.String(100))
     duration = db.Column(db.Integer)  # Duration in seconds
+    cover_image_data = db.Column(db.LargeBinary)  # Store cover image as BLOB
     
     # Publishing and scheduling
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -111,6 +112,44 @@ class Song(db.Model):
         if not self.file_data:
             return None
         return base64.b64encode(self.file_data).decode('utf-8')
+    
+    def get_base64_cover_image_data(self) -> Optional[str]:
+        """
+        Convert the binary cover image data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the cover image data, or None if no data exists.
+        """
+        if not self.cover_image_data:
+            return None
+        return base64.b64encode(self.cover_image_data).decode('utf-8')
+    
+    def has_audio(self) -> bool:
+        """
+        Check if the song has audio file data.
+
+        Returns:
+            bool: True if audio file data exists, False otherwise.
+        """
+        return self.file_data is not None
+
+    def get_base64_audio_data(self) -> Optional[str]:
+        """
+        Convert the binary audio file data to a Base64-encoded string.
+
+        Returns:
+            Optional[str]: Base64-encoded string of the audio data, or None if no data exists.
+        """
+        return self.get_base64_file_data()
+    
+    def has_cover_image(self) -> bool:
+        """
+        Check if the song has cover image data.
+
+        Returns:
+            bool: True if cover image data exists, False otherwise.
+        """
+        return self.cover_image_data is not None
     
     def __repr__(self) -> str:
         return f'<Song {self.title}>'
