@@ -1,0 +1,34 @@
+{# 
+  Components Index
+  This file provides easy access to all component macros across the application
+#}
+
+{# Import common UI components #}
+{% from "components/common/ui_components.html" import 
+    section_header,
+    button,
+    icon,
+    card,
+    form_input,
+    alert
+%}
+
+{# Import landing page components #}
+{% from "components/landing/hero_section.html" import hero_section %}
+{% from "components/landing/features_section.html" import features_section %}
+{% from "components/landing/community_section.html" import community_section %}
+{% from "components/landing/testimonials_section.html" import testimonials_section %}
+{% from "components/landing/newsletter_section.html" import newsletter_section %}
+{% from "components/landing/cta_section.html" import cta_section %}
+
+{# 
+  Usage Examples:
+  
+  1. Import all components in a template:
+     {% from "components/components.html" import button, card, hero_section %}
+  
+  2. Use components:
+     {{ button("Click Me", "/action", "primary", "lg") }}
+     {{ section_header("My Title", "My subtitle") }}
+     {{ hero_section() }}
+#}

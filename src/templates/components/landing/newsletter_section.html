@@ -1,0 +1,54 @@
+{# 
+  Newsletter Signup Section Component
+  Parameters:
+  - section_id: ID for the section (default: "subscribe")
+  - title: Section title (default: "Stay Connected With Us")
+  - description: Section description text
+  - form_action: Form action URL (default: "#")
+  - form_method: Form method (default: "POST")
+  - benefits: List of benefit text strings
+#}
+{% macro newsletter_section(
+    section_id="subscribe",
+    title="Stay Connected With Us",
+    description="Join our weekly newsletter and be the first to receive new stories, music, and inspiration delivered directly to your inbox.",
+    form_action="#",
+    form_method="POST",
+    benefits=None
+) %}
+{% set default_benefits = [
+    "Weekly inspiration and encouragement",
+    "Exclusive content and early access",
+    "Community updates and events"
+] %}
+
+<section id="{{ section_id }}" class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="newsletter-text">
+                <h2>{{ title }}</h2>
+                <p>{{ description }}</p>
+                <div class="newsletter-benefits">
+                    {% for benefit in (benefits or default_benefits) %}
+                    <div class="benefit">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"/>
+                        </svg>
+                        <span>{{ benefit }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="newsletter-form">
+                <form class="subscribe-form" action="{{ form_action }}" method="{{ form_method }}">
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" placeholder="Enter your email address" required class="form-input">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </div>
+                    <p class="form-note">We respect your privacy. Unsubscribe at any time.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}

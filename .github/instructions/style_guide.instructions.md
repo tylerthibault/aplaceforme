@@ -1,4 +1,7 @@
 ---
+applyTo: '**'
+---
+---
 applyTo: 'html, css, js'
 ---
 

@@ -1,0 +1,31 @@
+{# 
+  Call to Action Section Component
+  Parameters:
+  - title: Section title (default: "Ready to Begin Your Journey?")
+  - description: Section description text
+  - primary_btn_text: Text for primary CTA button (default: "Join Our Community")
+  - primary_btn_href: Link for primary CTA button (default: "#subscribe")
+  - secondary_btn_text: Text for secondary button (default: "Read Our Stories")
+  - secondary_btn_href: Link for secondary button (default: "/blogs")
+#}
+{% macro cta_section(
+    title="Ready to Begin Your Journey?",
+    description="Join thousands of others who have found their place in our faith community. Start exploring today and discover the difference faith can make in your life.",
+    primary_btn_text="Join Our Community",
+    primary_btn_href="#subscribe",
+    secondary_btn_text="Read Our Stories",
+    secondary_btn_href="/blogs"
+) %}
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>{{ title }}</h2>
+            <p>{{ description }}</p>
+            <div class="cta-buttons">
+                <a href="{{ primary_btn_href }}" class="btn btn-primary btn-lg">{{ primary_btn_text }}</a>
+                <a href="{{ secondary_btn_href }}" class="btn btn-outline btn-lg">{{ secondary_btn_text }}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}
