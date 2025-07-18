@@ -1,60 +1,109 @@
-{# 
-  Community Section Component
-  Parameters:
-  - title: Section title (default: "Join Our Growing Community")
-  - description: Section description text
-  - stats: List of stat objects with number and label
-#}
-{% macro community_section(
-    title="Join Our Growing Community",
-    description="You're not alone on this journey. Connect with like-minded believers who share your passion for faith, growth, and making a positive impact in the world.",
-    stats=None
-) %}
-{% set default_stats = [
-    {'number': '500+', 'label': 'Community Members'},
-    {'number': '150+', 'label': 'Stories Shared'},
-    {'number': '50+', 'label': 'Weekly Listeners'}
-] %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/community.css') }}">
 
-<section class="community-section">
+<section class="community-section" aria-labelledby="community-heading">
     <div class="container">
-        <div class="community-content">
-            <div class="community-text">
-                <h2>{{ title }}</h2>
-                <p>{{ description }}</p>
-                <div class="community-stats">
-                    {% for stat in (stats or default_stats) %}
-                    <div class="stat">
-                        <span class="stat-number">{{ stat.number }}</span>
-                        <span class="stat-label">{{ stat.label }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="community-image">
-                <div class="community-illustration">
-                    <svg viewBox="0 0 300 200" class="community-svg">
-                        <defs>
-                            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:var(--accent-green);stop-opacity:0.6" />
-                                <stop offset="100%" style="stop-color:var(--primary-soft-blue);stop-opacity:0.4" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Community circles -->
-                        <circle cx="150" cy="100" r="80" fill="url(#grad2)" opacity="0.3"/>
-                        <circle cx="120" cy="80" r="25" fill="var(--primary-soft-blue)" opacity="0.7"/>
-                        <circle cx="180" cy="80" r="25" fill="var(--primary-gold)" opacity="0.7"/>
-                        <circle cx="150" cy="130" r="25" fill="var(--accent-green)" opacity="0.7"/>
-                        <circle cx="100" cy="120" r="20" fill="var(--primary-deep-blue)" opacity="0.6"/>
-                        <circle cx="200" cy="120" r="20" fill="var(--primary-deep-blue)" opacity="0.6"/>
-                        <!-- Connection lines -->
-                        <line x1="150" y1="100" x2="120" y2="80" stroke="var(--primary-soft-blue)" stroke-width="2" opacity="0.5"/>
-                        <line x1="150" y1="100" x2="180" y2="80" stroke="var(--primary-soft-blue)" stroke-width="2" opacity="0.5"/>
-                        <line x1="150" y1="100" x2="150" y2="130" stroke="var(--primary-soft-blue)" stroke-width="2" opacity="0.5"/>
+        <div class="community-hero">
+            <div class="community-content">
+                <div class="community-badge">
+                    <!-- Platform/community hub icon -->
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2L3 7V18H8V13H12V18H17V7L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 9H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
+                    <span>Community Hub</span>
                 </div>
+                
+                <h2 id="community-heading" class="community-title">Platform Updates & Community Growth</h2>
+                
+                <p class="community-description">
+                    Keep up with the latest platform announcements, new content releases, and behind-the-scenes updates. 
+                    See how our faith community is growing and what's happening in our ministry.
+                </p>
+                
+                <!-- Community News Feed -->
+                <div class="news-feed">
+                    <!-- Featured News Item -->
+                    <article class="news-item featured">
+                        <div class="news-header">
+                            <span class="news-category">Platform Update</span>
+                            <time class="news-date" datetime="2025-07-15">2 days ago</time>
+                        </div>
+                        <h3 class="news-title">New Music Library Feature Launched</h3>
+                        <p class="news-excerpt">
+                            We've just released an enhanced music library with better search, playlists, and streaming quality. 
+                            Browse through all our worship songs with improved audio quality and new categorization features.
+                        </p>
+                        <div class="news-actions">
+                            <a href="/songs" class="news-link">Explore Library</a>
+                            <span class="news-engagement">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="M6 8L8 10L10 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8 5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                                147 new users this week
+                            </span>
+                        </div>
+                    </article>
+                    
+                    <!-- Regular News Items -->
+                    <div class="news-grid">
+                        <article class="news-item">
+                            <div class="news-header">
+                                <span class="news-category">Behind-the-Scenes</span>
+                                <time class="news-date" datetime="2025-07-14">3 days ago</time>
+                            </div>
+                            <h4 class="news-title">Recording Session: "Songs of Hope" Album</h4>
+                            <p class="news-excerpt">
+                                Take a peek behind the curtain as we record our upcoming album. See the creative process, 
+                                prayer time, and heart behind each worship song being crafted.
+                            </p>
+                            <a href="/blog" class="news-link">Watch Video</a>
+                        </article>
+                        
+                        <article class="news-item">
+                            <div class="news-header">
+                                <span class="news-category">Community Metrics</span>
+                                <time class="news-date" datetime="2025-07-12">5 days ago</time>
+                            </div>
+                            <h4 class="news-title">1,000 Subscriber Milestone Reached!</h4>
+                            <p class="news-excerpt">
+                                Our community has grown to over 1,000 newsletter subscribers! Thank you for being part 
+                                of this journey. See our growth stats and what's coming next.
+                            </p>
+                            <a href="/blog" class="news-link">View Stats</a>
+                        </article>
+                        
+                        <article class="news-item">
+                            <div class="news-header">
+                                <span class="news-category">Event Coverage</span>
+                                <time class="news-date" datetime="2025-07-10">1 week ago</time>
+                            </div>
+                            <h4 class="news-title">Monthly Prayer Gathering Highlights</h4>
+                            <p class="news-excerpt">
+                                Over 75 community members joined us for our monthly prayer circle. Amazing fellowship, 
+                                worship time, and powerful moments of connection with God and each other.
+                            </p>
+                            <a href="/blog" class="news-link">View Photos</a>
+                        </article>
+                        
+                        <article class="news-item">
+                            <div class="news-header">
+                                <span class="news-category">Platform Feature</span>
+                                <time class="news-date" datetime="2025-07-08">1 week ago</time>
+                            </div>
+                            <h4 class="news-title">New Radio Show Schedule Feature</h4>
+                            <p class="news-excerpt">
+                                We've added a new schedule feature where you can subscribe to radio show reminders 
+                                and never miss an episode. Get notified 30 minutes before each live session.
+                            </p>
+                            <a href="/radio-sessions" class="news-link">Try Feature</a>
+                        </article>
+                    </div>
+                </div>
+                
             </div>
         </div>
+        
     </div>
 </section>
-{% endmacro %}

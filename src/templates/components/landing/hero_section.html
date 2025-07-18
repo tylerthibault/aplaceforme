@@ -1,62 +1,76 @@
-{# 
-  Hero Section Component
-  Parameters:
-  - title: Main hero title text (default: "Welcome to A Place For Me")
-  - subtitle: Hero subtitle/description text
-  - primary_btn_text: Text for primary CTA button (default: "Join Our Community")
-  - primary_btn_href: Link for primary CTA button (default: "#subscribe")
-  - secondary_btn_text: Text for secondary button (default: "Explore Content")
-  - secondary_btn_href: Link for secondary button (default: "#features")
-#}
-{% macro hero_section(
-    title="Welcome to <span class='text-gradient'>A Place For Me</span>",
-    subtitle="A digital sanctuary where faith meets community. Discover inspiring stories, uplifting music, and a place to grow together in faith and purpose.",
-    primary_btn_text="Join Our Community",
-    primary_btn_href="#subscribe",
-    secondary_btn_text="Explore Content",
-    secondary_btn_href="#features"
-) %}
-<section class="hero-section">
-    <div class="hero-content">
-        <div class="container">
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    {{ title | safe }}
-                </h1>
-                <p class="hero-subtitle">
-                    {{ subtitle }}
-                </p>
-                <div class="hero-buttons">
-                    <a href="{{ primary_btn_href }}" class="btn btn-primary btn-lg">
-                        {{ primary_btn_text }}
-                    </a>
-                    <a href="{{ secondary_btn_href }}" class="btn btn-outline btn-lg">
-                        {{ secondary_btn_text }}
-                    </a>
+<!-- apply css -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/hero.css') }}">
+
+<!-- Parallax Hero Section -->
+<section class="parallax-hero">
+    <!-- Parallax Background Layer (Mountains) -->
+    <div class="parallax-layer parallax-background" data-speed="0.3">
+        <img src="{{ url_for('static', filename='img/landing_parallax_background.jpg') }}" alt="Mountain landscape background" class="parallax-image">
+        <!-- Background overlay for depth -->
+        <div class="parallax-overlay"></div>
+    </div>
+    
+    <!-- Title Behind Background (initially hidden) -->
+    <div class="parallax-layer parallax-title-behind" data-speed="-5">
+        <h1 class="hero-title-behind">
+            A Place For Me
+        </h1>
+    </div>
+    
+    <!-- Parallax Foreground Layer (Tree) -->
+    <div class="parallax-layer parallax-foreground" data-speed="0.3">
+        <img src="{{ url_for('static', filename='img/landing_parallax_forground.png') }}" alt="Tree in foreground" class="parallax-image">
+    </div>
+    
+    <!-- Main Content Layer -->
+    <div class="parallax-layer parallax-content" data-speed="0.8">
+        <div class="hero-content">
+            <div class="container">
+                <!-- Animated Title (emerges to front) -->
+                <div class="hero-title-container">
+                    <h1 class="hero-title-main">
+                        <span class="title-word" data-delay="0">A</span>
+                        <span class="title-word" data-delay="200">Place</span>
+                        <span class="title-word" data-delay="400">For</span>
+                        <span class="title-word" data-delay="600">Me</span>
+                    </h1>
                 </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-illustration">
-                    <svg viewBox="0 0 400 300" class="hero-svg">
-                        <defs>
-                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:var(--primary-gold);stop-opacity:0.8" />
-                                <stop offset="100%" style="stop-color:var(--primary-soft-blue);stop-opacity:0.6" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Stylized church/community illustration -->
-                        <rect x="50" y="120" width="300" height="120" rx="10" fill="url(#grad1)" opacity="0.7"/>
-                        <polygon points="200,80 120,120 280,120" fill="var(--primary-deep-blue)" opacity="0.8"/>
-                        <circle cx="200" cy="100" r="8" fill="var(--primary-gold)"/>
-                        <rect x="180" y="180" width="40" height="60" fill="var(--primary-cream)"/>
-                        <!-- People silhouettes -->
-                        <circle cx="140" cy="200" r="12" fill="var(--primary-soft-blue)" opacity="0.6"/>
-                        <circle cx="260" cy="200" r="12" fill="var(--primary-soft-blue)" opacity="0.6"/>
-                        <circle cx="200" cy="220" r="12" fill="var(--primary-soft-blue)" opacity="0.6"/>
-                    </svg>
+                
+                <!-- Content that appears after title animation -->
+                <div class="hero-content-text">
+                    <p class="hero-subtitle">
+                        A digital sanctuary where faith meets community. Discover inspiring stories, uplifting music, and a place to grow together in faith and purpose.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#subscribe" class="btn btn-primary btn-lg">
+                            Join Our Community
+                        </a>
+                        <a href="#features" class="btn btn-outline btn-lg">
+                            Explore Content
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Floating particles for magic effect -->
+    <div class="floating-particles">
+        <div class="particle" data-delay="0"></div>
+        <div class="particle" data-delay="1000"></div>
+        <div class="particle" data-delay="2000"></div>
+        <div class="particle" data-delay="3000"></div>
+        <div class="particle" data-delay="4000"></div>
+        <div class="particle" data-delay="5000"></div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <span class="scroll-text">Scroll to explore</span>
+    </div>
 </section>
-{% endmacro %}

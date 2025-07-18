@@ -1,56 +1,136 @@
-{# 
-  Testimonials Section Component
-  Parameters:
-  - title: Section title (default: "What Our Community Says")
-  - subtitle: Section subtitle
-  - testimonials: List of testimonial objects with quote, author, and role
-#}
-{% macro testimonials_section(
-    title="What Our Community Says",
-    subtitle="Hear from members who have found encouragement and growth in our faith community",
-    testimonials=None
-) %}
-{% set default_testimonials = [
-    {
-        'quote': 'This platform has been a beacon of hope in my life. The God stories shared here remind me daily of His faithfulness and love.',
-        'author': 'Sarah M.',
-        'role': 'Community Member'
-    },
-    {
-        'quote': 'The music and radio sessions have transformed my morning routine. I start each day with purpose and peace.',
-        'author': 'David L.',
-        'role': 'Weekly Listener'
-    },
-    {
-        'quote': 'Finding this community was exactly what I needed. The newsletter keeps me connected and inspired throughout the week.',
-        'author': 'Maria R.',
-        'role': 'Newsletter Subscriber'
-    }
-] %}
-
-<section class="testimonials-section">
+<section class="testimonials-section-3d">
+    <div class="section-background">
+        <div class="floating-elements">
+            <div class="floating-circle"></div>
+            <div class="floating-circle"></div>
+            <div class="floating-circle"></div>
+        </div>
+    </div>
+    
     <div class="container">
         <div class="section-header">
-            <h2>{{ title }}</h2>
-            <p>{{ subtitle }}</p>
+            <div class="header-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Authentic Stories</span>
+            </div>
+            <h2 class="section-title">
+                <span class="title-line">Lives Transformed</span>
+                <span class="title-accent">by Grace</span>
+            </h2>
+            <p class="section-subtitle">
+                Real stories from our community about how faith has changed everything
+            </p>
         </div>
         
-        <div class="testimonials-grid">
-            {% for testimonial in (testimonials or default_testimonials) %}
-            <div class="testimonial-card">
-                <div class="testimonial-quote">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--primary-gold)" opacity="0.3">
-                        <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/>
+        {% if testimonials %}
+        <div class="testimonials-container">
+            <div class="testimonials-grid-3d">
+                {% for testimonial in testimonials[:6] %}
+                <div class="testimonial-card-3d" data-index="{{ loop.index0 }}">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="avatar-container">
+                                {% if testimonial.image_path %}
+                                    <img src="{{ testimonial.image_path }}" alt="{{ testimonial.author.username }}" class="avatar-image">
+                                {% else %}
+                                    <div class="avatar-svg" data-index="{{ loop.index0 }}">
+                                        <div class="avatar-circle">
+                                            <div class="avatar-icon">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 3L14.5 8.5L20 9L16 13L17 19L12 16.5L7 19L8 13L4 9L9.5 8.5L12 3Z" fill="white"/>
+                                                </svg>
+                                            </div>
+                                            <div class="avatar-text">{{ testimonial.author.username[0].upper() }}</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="avatar-ring"></div>
+                            </div>
+                            
+                            <div class="card-content">
+                                <div class="quote-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 21C3 16.5 6.5 13 11 13V9C6.5 9 3 12.5 3 17V21H3ZM16 21C16 16.5 19.5 13 24 13V9C19.5 9 16 12.5 16 17V21H16Z" fill="currentColor" opacity="0.6"/>
+                                    </svg>
+                                </div>
+                                <p class="testimonial-text">
+                                    {{ testimonial.content|truncate(140, true, '...') }}
+                                </p>
+                                <div class="author-info">
+                                    <h4 class="author-name">{{ testimonial.author.username }}</h4>
+                                    <time class="testimonial-date">{{ testimonial.created_at.strftime('%B %Y') }}</time>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-back">
+                            <div class="full-content">
+                                <p class="full-text">{{ testimonial.content }}</p>
+                                <div class="read-more-info">
+                                    <span>Read full story</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if testimonials|length > 6 %}
+            <div class="load-more-section">
+                <button class="load-more-btn" onclick="window.location.href='/testimonials'">
+                    <span>View All {{ testimonials|length }} Stories</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="empty-testimonials">
+            <div class="empty-visual">
+                <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="40" stroke="#228B22" stroke-width="2" stroke-dasharray="8 4" opacity="0.5"/>
+                    <path d="M50 25L55 40L70 40L58 50L63 65L50 55L37 65L42 50L30 40L45 40L50 25Z" fill="#228B22" opacity="0.6"/>
+                </svg>
+            </div>
+            <h3>Share the First Story</h3>
+            <p>Be the first to share how faith has transformed your life</p>
+            <a href="/testimonials" class="empty-cta-btn">
+                <span>Share Your Story</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="invitation-banner">
+            <div class="banner-content">
+                <div class="banner-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61A5.5 5.5 0 0 0 15.5 3H12V21L15.5 19L19 21V7.5C19 6.12 20.84 4.61 20.84 4.61Z" fill="currentColor"/>
+                        <path d="M12 21L8.5 19L5 21V7.5C5 5.84 6.34 4.5 8 4.5H12V21Z" fill="currentColor" opacity="0.7"/>
                     </svg>
                 </div>
-                <p>"{{ testimonial.quote }}"</p>
-                <div class="testimonial-author">
-                    <strong>{{ testimonial.author }}</strong>
-                    <span>{{ testimonial.role }}</span>
+                <div class="banner-text">
+                    <h3>Your Story Matters</h3>
+                    <p>Join our community by sharing your faith journey</p>
                 </div>
+                <a href="/testimonials" class="banner-btn">
+                    Share Now
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
             </div>
-            {% endfor %}
         </div>
     </div>
 </section>
-{% endmacro %}
+

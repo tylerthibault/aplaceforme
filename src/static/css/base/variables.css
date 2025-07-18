@@ -1,0 +1,82 @@
+/* ===== CSS VARIABLES ===== */
+:root {
+    /* Primary Colors - Faith-inspired palette */
+    --primary-gold: #D4AF37;
+    --primary-deep-blue: #1E3A8A;
+    --primary-soft-blue: #3B82F6;
+    --primary-cream: #FEF7ED;
+    --primary-white: #FFFFFF;
+    
+    /* Secondary Colors */
+    --secondary-gray-100: #F3F4F6;
+    --secondary-gray-200: #E5E7EB;
+    --secondary-gray-300: #D1D5DB;
+    --secondary-gray-400: #9CA3AF;
+    --secondary-gray-500: #6B7280;
+    --secondary-gray-600: #4B5563;
+    --secondary-gray-700: #374151;
+    --secondary-gray-800: #1F2937;
+    --secondary-gray-900: #111827;
+    --secondary-gray-50: #F9FAFB;
+    
+    /* Accent Colors */
+    --accent-green: #10B981;
+    --accent-orange: #F59E0B;
+    --accent-red: #EF4444;
+    --accent-purple: #8B5CF6;
+    --accent-color: #3498db;
+    
+    /* Text Colors */
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    
+    /* Background Colors */
+    --gray-100: #F3F4F6;
+    
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;   /* 4px */
+    --spacing-sm: 0.5rem;    /* 8px */
+    --spacing-md: 1rem;      /* 16px */
+    --spacing-lg: 1.5rem;    /* 24px */
+    --spacing-xl: 2rem;      /* 32px */
+    --spacing-2xl: 3rem;     /* 48px */
+    --spacing-3xl: 4rem;     /* 64px */
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;   /* 6px */
+    --radius-md: 0.5rem;     /* 8px */
+    --radius-lg: 0.75rem;    /* 12px */
+    --radius-xl: 1rem;       /* 16px */
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Flash Message Colors */
+    --success-light: #D1FAE5;
+    --success-dark: #065F46;
+    --success-border: #A7F3D0;
+    
+    --error-light: #FEE2E2;
+    --error-dark: #991B1B;
+    --error-border: #FECACA;
+    
+    --info-light: #DBEAFE;
+    --info-dark: #1E40AF;
+    --info-border: #BFDBFE;
+    
+    --warning-light: #FEF3C7;
+    --warning-dark: #92400E;
+    --warning-border: #FDE68A;
+}

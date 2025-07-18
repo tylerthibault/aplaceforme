@@ -1,25 +1,22 @@
 {% extends "bases/public_base.html" %}
-{% from "components/landing_components.html" import 
-    hero_section, 
-    features_section, 
-    community_section, 
-    testimonials_section, 
-    newsletter_section, 
-    cta_section 
-%}
 
 {% block title %}Welcome to A Place For Me{% endblock %}
 
+{% block custom_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/testimonials-3d.css') }}">
+{% endblock %}
+
 {% block main %}
-{{ hero_section() }}
+{% include "components/landing/hero_section.html" %}
 
-{{ features_section() }}
+{% include "components/landing/features_section.html" %}
 
-{{ community_section() }}
+{% include "components/landing/cta_section.html" %}
 
-{{ testimonials_section() }}
+{% include "components/landing/community_section.html" %}
 
-{{ newsletter_section() }}
+{% include "components/landing/testimonials_section.html" %}
 
-{{ cta_section() }}
+{% include "components/landing/newsletter_section.html" %}
+
 {% endblock %}

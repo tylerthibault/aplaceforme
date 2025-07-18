@@ -1,0 +1,296 @@
+/* ===== CTA SECTION COMPONENT ===== */
+/* Nature-inspired design following style guide */
+
+.cta-section {
+    position: relative;
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #228B22 0%, #8A9A5B 100%);
+    color: #F5F5F5;
+    overflow: hidden;
+    margin-top: 4rem ;
+}
+
+.cta-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%), 
+                linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.03) 75%), 
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.03) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    z-index: 1;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-content {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.cta-icon {
+    color: #32CD32;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    animation: gentle-float 4s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.cta-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    color: #F5F5F5;
+    letter-spacing: -0.02em;
+}
+
+.cta-description {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    color: rgba(245, 245, 245, 0.95);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #32CD32, #228B22);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.stat-item:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #32CD32;
+    margin-bottom: 0.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.stat-label {
+    display: block;
+    font-size: 1rem;
+    color: rgba(245, 245, 245, 0.85);
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-cta {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.25s ease;
+    min-width: 200px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.btn.btn-primary.btn-cta {
+    background: #228B22;
+    color: #F5F5F5;
+    border: 2px solid #228B22;
+    box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
+}
+
+.btn.btn-primary.btn-cta:hover {
+    background: #1F7A1F;
+    border-color: #1F7A1F;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
+}
+
+.btn.btn-outline.btn-cta {
+    background: transparent;
+    color: #F5F5F5;
+    border: 2px solid rgba(245, 245, 245, 0.4);
+}
+
+.btn.btn-outline.btn-cta:hover {
+    background: rgba(245, 245, 245, 0.1);
+    border-color: #F5F5F5;
+    transform: translateY(-2px);
+}
+
+.cta-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: rgba(245, 245, 245, 0.75);
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.cta-note svg {
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cta-section {
+        padding: 3rem 0;
+        margin: 2rem 0;
+    }
+    
+    .cta-title {
+        font-size: 2.25rem;
+    }
+    
+    .cta-description {
+        font-size: 1.125rem;
+        margin-bottom: 2rem;
+    }
+    
+    .cta-stats {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-item {
+        padding: 1.5rem 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .btn-cta {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cta-title {
+        font-size: 1.875rem;
+    }
+    
+    .cta-description {
+        font-size: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+    }
+}
+
+/* Enhanced animations */
+.cta-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .cta-icon {
+        animation: none;
+    }
+    
+    .stat-item:hover {
+        transform: none;
+    }
+    
+    .btn-cta:hover {
+        transform: none;
+    }
+}

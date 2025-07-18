@@ -1,31 +1,63 @@
-{# 
-  Call to Action Section Component
-  Parameters:
-  - title: Section title (default: "Ready to Begin Your Journey?")
-  - description: Section description text
-  - primary_btn_text: Text for primary CTA button (default: "Join Our Community")
-  - primary_btn_href: Link for primary CTA button (default: "#subscribe")
-  - secondary_btn_text: Text for secondary button (default: "Read Our Stories")
-  - secondary_btn_href: Link for secondary button (default: "/blogs")
-#}
-{% macro cta_section(
-    title="Ready to Begin Your Journey?",
-    description="Join thousands of others who have found their place in our faith community. Start exploring today and discover the difference faith can make in your life.",
-    primary_btn_text="Join Our Community",
-    primary_btn_href="#subscribe",
-    secondary_btn_text="Read Our Stories",
-    secondary_btn_href="/blogs"
-) %}
-<section class="cta-section">
+<!-- attach cta.css -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/cta.css') }}">
+
+<section class="cta-section " aria-labelledby="cta-heading">
+    <div class="cta-background-overlay" aria-hidden="true"></div>
     <div class="container">
         <div class="cta-content">
-            <h2>{{ title }}</h2>
-            <p>{{ description }}</p>
-            <div class="cta-buttons">
-                <a href="{{ primary_btn_href }}" class="btn btn-primary btn-lg">{{ primary_btn_text }}</a>
-                <a href="{{ secondary_btn_href }}" class="btn btn-outline btn-lg">{{ secondary_btn_text }}</a>
+            <div class="cta-icon" aria-hidden="true">
+                <!-- Nature-inspired leaf/tree icon -->
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30 8C30 8 15 12 15 30C15 42 25 50 30 52C35 50 45 42 45 30C45 12 30 8 30 8Z" fill="currentColor" opacity="0.8"/>
+                    <path d="M30 8C30 8 22 15 22 28C22 35 26 40 30 42C34 40 38 35 38 28C38 15 30 8 30 8Z" fill="currentColor"/>
+                    <path d="M30 42L30 58" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M27 48C25 46 20 45 18 47" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M33 52C35 50 40 49 42 51" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
+            
+            <h2 id="cta-heading" class="cta-title">Grow Your Faith, Share Your Story</h2>
+            
+            <p class="cta-description">
+                Step into a nurturing community where faith flourishes and stories inspire. 
+                Connect with others on their spiritual journey, discover powerful testimonies, 
+                and find the encouragement you need to deepen your relationship with God.
+            </p>
+            
+            <div class="cta-stats" role="region" aria-label="Community statistics">
+                <div class="stat-item">
+                    <span class="stat-number" aria-label="Over 750">750+</span>
+                    <span class="stat-label">Inspiring Stories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" aria-label="Over 2000">2,000+</span>
+                    <span class="stat-label">Community Members</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" aria-label="Over 100">100+</span>
+                    <span class="stat-label">Uplifting Songs</span>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#subscribe" class="btn btn-primary btn-cta" aria-describedby="cta-note">
+                    <span>Join Our Family</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="/stories" class="btn btn-outline btn-cta">
+                    Discover Stories
+                </a>
+            </div>
+            
+            <p id="cta-note" class="cta-note">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6.5 8L7.5 9L9.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Free to join • Faith-centered • Unsubscribe anytime
+            </p>
         </div>
     </div>
 </section>
-{% endmacro %}

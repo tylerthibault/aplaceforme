@@ -48,7 +48,12 @@ def index():
     Returns:
         Response: Home page template
     """
-    return render_template('public/landing/index.html')
+    # Get recent testimonials for the landing page
+    testimonials = Testimonial.query.filter_by(is_published=True, is_approved=True)\
+                                   .order_by(Testimonial.created_at.desc())\
+                                   .limit(12).all()  # Get 12 to support show all functionality
+    
+    return render_template('public/landing/index.html', testimonials=testimonials)
 
 
 @main_bp.route('/about')
