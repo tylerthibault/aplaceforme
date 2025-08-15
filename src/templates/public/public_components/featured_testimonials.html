@@ -1,0 +1,16 @@
+<section class="container animate-on-scroll">
+  <h2>Latest Testimonials</h2>
+  <div class="grid">
+    {% for t in testimonials %}
+    <article class="card glass">
+      {% if t.cover_image_b64 %}
+      <img alt="Cover for {{ t.title }}" src="data:image/*;base64,{{ t.cover_image_b64 }}" />
+      {% endif %}
+      <blockquote>{{ t.quote or t.summary or t.title }}</blockquote>
+      <p><a href="/testimonials/{{ t.slug }}">Read more</a></p>
+    </article>
+    {% else %}
+    <p>No testimonials yet.</p>
+    {% endfor %}
+  </div>
+</section>

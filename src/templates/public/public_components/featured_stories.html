@@ -1,0 +1,16 @@
+<section class="container animate-on-scroll">
+  <h2>Latest God Stories</h2>
+  <div class="grid">
+    {% for s in stories %}
+    <article class="card glass">
+      {% if s.cover_image_b64 %}
+      <img alt="Cover for {{ s.title }}" src="data:image/*;base64,{{ s.cover_image_b64 }}" />
+      {% endif %}
+      <h3><a href="/stories/{{ s.slug }}">{{ s.title }}</a></h3>
+      <p>{{ s.summary }}</p>
+    </article>
+    {% else %}
+    <p>No stories yet.</p>
+    {% endfor %}
+  </div>
+</section>

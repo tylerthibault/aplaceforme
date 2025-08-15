@@ -1,0 +1,10 @@
+{% extends 'bases/public.html' %}
+{% block content %}
+<article class="container">
+  <h1>{{ testimonial.title }}</h1>
+  {% if testimonial.cover_image_b64 %}
+  <img alt="Cover for {{ testimonial.title }}" src="data:image/*;base64,{{ testimonial.cover_image_b64 }}" />
+  {% endif %}
+  <blockquote class="prose">{{ testimonial.body | safe }}</blockquote>
+</article>
+{% endblock %}

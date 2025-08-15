@@ -1,0 +1,17 @@
+<section class="container animate-on-scroll">
+  <h2>Latest Music</h2>
+  {% if latest_track %}
+  <div class="card glass">
+    {% if latest_track.cover_image_b64 %}
+    <img alt="Cover for {{ latest_track.title }}" src="data:image/*;base64,{{ latest_track.cover_image_b64 }}" />
+    {% endif %}
+    <h3>{{ latest_track.title }}</h3>
+    <audio controls preload="none">
+      <source src="data:audio/*;base64,{{ latest_track.audio_b64 }}" />
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  {% else %}
+  <p>No tracks yet.</p>
+  {% endif %}
+</section>

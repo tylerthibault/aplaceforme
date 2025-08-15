@@ -1,0 +1,11 @@
+<section class="container animate-on-scroll">
+  <div class="glass card">
+    <h2>Subscribe</h2>
+    <form method="POST" action="/subscribe">
+      {{ form.csrf_token }}
+      <label>Email {{ form.email(size=32) }}</label>
+      <label>Name {{ form.name(size=32) }}</label>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,19 @@
+{% extends 'bases/public.html' %}
+{% block content %}
+<div class="container">
+  <h1>Music</h1>
+  <div class="grid">
+    {% for m in tracks %}
+    <article class="card glass">
+      <h3>{{ m.title }}</h3>
+      {% if m.cover_image_b64 %}
+      <img alt="Cover for {{ m.title }}" src="data:image/*;base64,{{ m.cover_image_b64 }}" />
+      {% endif %}
+      {% if m.audio_b64 %}
+      <audio controls preload="none"><source src="data:audio/*;base64,{{ m.audio_b64 }}" /></audio>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

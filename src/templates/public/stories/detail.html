@@ -1,67 +1,10 @@
-{% extends "bases/public_base.html" %}
-
-{% block title %}{{ story.title }} - God Stories{% endblock %}
-
-{% block main %}
-<article class="content-detail story-detail">
-    <div class="container-narrow">
-        <header class="article-header">
-            <div class="story-badge-large">God Story</div>
-            <h1>{{ story.title }}</h1>
-            <div class="article-meta">
-                <span class="author">Shared by {{ story.author.username }}</span>
-                <span class="date">{{ story.created_at.strftime('%B %d, %Y') }}</span>
-            </div>
-        </header>
-
-        <div class="article-content story-content">
-            {{ story.content | nl2br | safe }}
-        </div>
-
-        <footer class="article-footer">
-            <div class="story-response">
-                <div class="response-prompt">
-                    <h4>How has this story impacted you?</h4>
-                    <p>If this testimony has encouraged you or if you have a similar experience, we'd love to hear from you.</p>
-                    <a href="mailto:response@aplaceforme.com?subject=Response to: {{ story.title | urlencode }}" class="btn btn-outline">Share Your Response</a>
-                </div>
-            </div>
-
-            <div class="share-section">
-                <h4>Share this story</h4>
-                <div class="share-buttons">
-                    <a href="https://twitter.com/intent/tweet?text=This God story is so encouraging: {{ story.title | urlencode }}&url={{ request.url | urlencode }}" 
-                       class="share-btn twitter" target="_blank" rel="noopener">
-                        <i class="fab fa-twitter"></i> Twitter
-                    </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}" 
-                       class="share-btn facebook" target="_blank" rel="noopener">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </a>
-                    <a href="mailto:?subject=Encouraging God Story: {{ story.title | urlencode }}&body=I thought you might be encouraged by this testimony: {{ request.url | urlencode }}" 
-                       class="share-btn email">
-                        <i class="fas fa-envelope"></i> Email
-                    </a>
-                </div>
-            </div>
-
-            <div class="navigation-section">
-                <a href="{{ url_for('main.god_stories') }}" class="btn btn-outline">← Back to All Stories</a>
-            </div>
-        </footer>
-    </div>
+{% extends 'bases/public.html' %}
+{% block content %}
+<article class="container">
+  <h1>{{ story.title }}</h1>
+  {% if story.cover_image_b64 %}
+  <img alt="Cover for {{ story.title }}" src="data:image/*;base64,{{ story.cover_image_b64 }}" />
+  {% endif %}
+  <div class="prose">{{ story.body | safe }}</div>
 </article>
-
-<!-- Prayer Section -->
-<section class="prayer-section">
-    <div class="container">
-        <div class="prayer-content">
-            <h2>Let's Pray Together</h2>
-            <p>If this story has touched your heart, take a moment to thank God for His faithfulness and ask Him to continue working in similar ways in your life and the lives of others.</p>
-            <div class="prayer-prompt">
-                <p><em>"Thank you, Lord, for your faithfulness and for the way you work in our lives. Help us to see your hand at work and to share our stories with others who need encouragement. Amen."</em></p>
-            </div>
-        </div>
-    </div>
-</section>
 {% endblock %}

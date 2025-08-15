@@ -1,0 +1,36 @@
+{% extends 'bases/public.html' %}
+{% block content %}
+<div class="container">
+  <h1>Search</h1>
+  <form>
+    <input type="text" name="q" value="{{ q }}" placeholder="Search titles and summaries..." />
+    <button type="submit">Search</button>
+  </form>
+  {% if q %}
+  <h2>Stories</h2>
+  <ul>
+    {% for s in results.stories %}
+    <li><a href="/stories/{{ s.slug }}">{{ s.title }}</a></li>
+    {% else %}
+    <li>No results</li>
+    {% endfor %}
+  </ul>
+  <h2>Testimonials</h2>
+  <ul>
+    {% for t in results.testimonials %}
+    <li><a href="/testimonials/{{ t.slug }}">{{ t.title }}</a></li>
+    {% else %}
+    <li>No results</li>
+    {% endfor %}
+  </ul>
+  <h2>Music</h2>
+  <ul>
+    {% for m in results.music %}
+    <li>{{ m.title }}</li>
+    {% else %}
+    <li>No results</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}
