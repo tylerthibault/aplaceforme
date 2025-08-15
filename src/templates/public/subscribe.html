@@ -1,18 +1,22 @@
 {% extends 'bases/public.html' %}
 {% block content %}
-<div class="container">
-  <h1>Subscribe</h1>
-  <form method="POST">
-    {{ form.csrf_token }}
-    <div>
-      <label>Email</label>
-      {{ form.email(size=32) }}
+<div class="container animate-on-scroll">
+  <div class="hero" style="padding: 4rem 1rem;">
+    <div class="hero-bg"></div>
+    <div class="hero-card glass">
+      <h1>Stay Connected</h1>
+      <p>Join our community to receive the latest stories, testimonies, and music delivered directly to your inbox.</p>
+      <form method="POST">
+        {{ form.csrf_token }}
+        <div>
+          {{ form.email(placeholder="Enter your email", required=true) }}
+        </div>
+        <div>
+          {{ form.name(placeholder="Your name (optional)") }}
+        </div>
+        <button type="submit">Subscribe Now</button>
+      </form>
     </div>
-    <div>
-      <label>Name</label>
-      {{ form.name(size=32) }}
-    </div>
-    <button type="submit">Subscribe</button>
-  </form>
+  </div>
 </div>
 {% endblock %}

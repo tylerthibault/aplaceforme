@@ -1,11 +1,16 @@
 <section class="container animate-on-scroll">
-  <div class="glass card">
-    <h2>Subscribe</h2>
+  <div class="glass card text-center">
+    <h2>Stay Connected</h2>
+    <p class="text-muted mb-2">Get the latest stories, testimonies, and music delivered to your inbox.</p>
     <form method="POST" action="/subscribe">
       {{ form.csrf_token }}
-      <label>Email {{ form.email(size=32) }}</label>
-      <label>Name {{ form.name(size=32) }}</label>
-      <button type="submit">Subscribe</button>
+      <div>
+        {{ form.email(placeholder="Enter your email", required=true) }}
+      </div>
+      <div>
+        {{ form.name(placeholder="Your name (optional)") }}
+      </div>
+      <button type="submit">Subscribe Now</button>
     </form>
   </div>
 </section>
