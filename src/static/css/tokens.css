@@ -1,0 +1,160 @@
+/* ===== DESIGN TOKENS ===== */
+/* Modern Apple-inspired design system with glassmorphism */
+
+:root {
+    /* ===== CORE COLORS ===== */
+    /* Neutral Colors - Desaturated for modern feel */
+    --color-bg-primary: #FAFAFA;           /* Light background */
+    --color-bg-secondary: #F5F5F5;        /* Secondary background */
+    --color-surface: rgba(255, 255, 255, 0.8);  /* Glass surface base */
+    --color-surface-elevated: rgba(255, 255, 255, 0.9); /* Elevated glass */
+    
+    /* Text Colors */
+    --color-text-primary: #1D1D1F;        /* Apple-like dark text */
+    --color-text-secondary: #86868B;      /* Secondary text */
+    --color-text-tertiary: #C7C7CC;       /* Tertiary text */
+    
+    /* Accent Colors - Restrained */
+    --color-accent-primary: #007AFF;      /* iOS blue */
+    --color-accent-secondary: #5856D6;    /* iOS purple */
+    --color-accent-success: #34C759;      /* iOS green */
+    --color-accent-warning: #FF9500;      /* iOS orange */
+    --color-accent-danger: #FF3B30;       /* iOS red */
+    
+    /* Faith-inspired colors (keeping some brand elements) */
+    --color-brand-gold: #D4AF37;          /* Keep existing gold */
+    --color-brand-blue: #1E3A8A;          /* Keep existing deep blue */
+    --color-brand-cream: #FEF7ED;         /* Keep existing cream */
+    
+    /* ===== GLASSMORPHISM VARIABLES ===== */
+    /* Glass Alpha Values */
+    --glass-alpha-light: 0.7;             /* Light glass surfaces */
+    --glass-alpha-medium: 0.8;            /* Medium glass surfaces */
+    --glass-alpha-heavy: 0.9;             /* Heavy glass surfaces */
+    
+    /* Glass Blur Values */
+    --glass-blur-light: 8px;              /* Light blur */
+    --glass-blur-medium: 12px;            /* Medium blur */
+    --glass-blur-heavy: 20px;             /* Heavy blur */
+    
+    /* Glass Backgrounds */
+    --glass-bg-light: rgba(255, 255, 255, var(--glass-alpha-light));
+    --glass-bg-medium: rgba(255, 255, 255, var(--glass-alpha-medium));
+    --glass-bg-heavy: rgba(255, 255, 255, var(--glass-alpha-heavy));
+    
+    /* Glass Dark Mode (for dark sections) */
+    --glass-bg-dark-light: rgba(0, 0, 0, 0.1);
+    --glass-bg-dark-medium: rgba(0, 0, 0, 0.2);
+    --glass-bg-dark-heavy: rgba(0, 0, 0, 0.3);
+    
+    /* ===== SHADOW SYSTEM ===== */
+    /* Soft shadow elevations inspired by Apple's design */
+    --shadow-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.04), 
+                         0 1px 2px rgba(0, 0, 0, 0.06);
+    
+    --shadow-elevation-2: 0 4px 6px rgba(0, 0, 0, 0.05), 
+                         0 2px 4px rgba(0, 0, 0, 0.06);
+    
+    --shadow-elevation-3: 0 10px 15px rgba(0, 0, 0, 0.08), 
+                         0 4px 6px rgba(0, 0, 0, 0.06);
+    
+    --shadow-elevation-4: 0 20px 25px rgba(0, 0, 0, 0.1), 
+                         0 10px 10px rgba(0, 0, 0, 0.06);
+    
+    /* ===== TYPOGRAPHY SYSTEM ===== */
+    /* Apple-inspired system font stack */
+    --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 
+                   'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    
+    --font-system-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 
+                        'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    
+    /* Keep existing brand font for headings where needed */
+    --font-brand-display: 'Playfair Display', var(--font-system), serif;
+    
+    /* Typography Scale */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.25rem;      /* 20px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
+    
+    /* Line Heights */
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+    
+    /* ===== SPACING SYSTEM ===== */
+    /* 8pt grid system */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-8: 2rem;      /* 32px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    --space-16: 4rem;     /* 64px */
+    --space-20: 5rem;     /* 80px */
+    --space-24: 6rem;     /* 96px */
+    
+    /* ===== BORDER RADIUS ===== */
+    --radius-sm: 0.375rem;    /* 6px */
+    --radius-md: 0.5rem;      /* 8px */
+    --radius-lg: 0.75rem;     /* 12px */
+    --radius-xl: 1rem;        /* 16px */
+    --radius-2xl: 1.5rem;     /* 24px */
+    --radius-full: 9999px;    /* Full radius */
+    
+    /* ===== TRANSITIONS ===== */
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+    
+    /* Specific transitions */
+    --transition-glass: backdrop-filter var(--transition-normal), 
+                       background-color var(--transition-normal);
+    
+    --transition-shadow: box-shadow var(--transition-normal);
+    --transition-transform: transform var(--transition-normal);
+    
+    /* ===== SUBTLE HIGHLIGHT SYSTEM ===== */
+    /* Replace heavy gradients with subtle radial highlights */
+    --highlight-subtle: radial-gradient(circle at 50% 0%, 
+                                       rgba(255, 255, 255, 0.1) 0%, 
+                                       transparent 70%);
+    
+    --highlight-brand: radial-gradient(circle at 50% 0%, 
+                                      rgba(212, 175, 55, 0.08) 0%, 
+                                      transparent 60%);
+    
+    --highlight-accent: radial-gradient(circle at 50% 0%, 
+                                       rgba(0, 122, 255, 0.06) 0%, 
+                                       transparent 60%);
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg-primary: #1C1C1E;
+        --color-bg-secondary: #2C2C2E;
+        --color-surface: rgba(44, 44, 46, 0.8);
+        --color-surface-elevated: rgba(58, 58, 60, 0.9);
+        
+        --color-text-primary: #FFFFFF;
+        --color-text-secondary: #98989D;
+        --color-text-tertiary: #636366;
+        
+        /* Adjust glass for dark mode */
+        --glass-bg-light: rgba(44, 44, 46, var(--glass-alpha-light));
+        --glass-bg-medium: rgba(58, 58, 60, var(--glass-alpha-medium));
+        --glass-bg-heavy: rgba(72, 72, 74, var(--glass-alpha-heavy));
+    }
+}
